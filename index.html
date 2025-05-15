@@ -147,6 +147,10 @@ function createVideoElement(videoData) {
   container.appendChild(video);
   container.appendChild(title);
   return container;
+
+  const postId = videoData.postId;
+setupRatingSystem(postId); // You write this function using Firebase
+
 }
 
 function renderVideos(videosToRender) {
@@ -169,6 +173,7 @@ function getUniqueTags(videos) {
   return Array.from(tagsSet).sort();
 }
 
+  
 function renderTagButtons(tags) {
   tagsFilterDiv.innerHTML = '';
   tags.forEach(tag => {
