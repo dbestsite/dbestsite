@@ -2,11 +2,19 @@
   {
     "title": "External Video 1",
     "url": "https://files.catbox.moe/npqdzx.mp4",
-    "tags": ["baby", "funny","AI"]
+    "tags": ["baby", "funny","AI"],
+    "postId": "video1"
   },
   {
     "title": "External Video 2",
     "url": "https://cdn.example.com/media/musicvideo.mp4",
-    "tags": ["music", "live"]
+    "tags": ["music", "live"],
+    "postId": "video2"
+  },
+  {
+    "title": "External Video 3",
+    "url": "https://anotherhost.com/media/lecture.mp4",
+    "tags": ["lecture", "history"],
+    "postId": "video3"
   }
 ]
