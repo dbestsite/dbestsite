@@ -49,6 +49,12 @@ main {
   gap: 1rem;
 }
 
+.adgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem; text-align: center;
+}
+
 .video-card {
   background: #1e1e1e;
   padding: 1rem;
