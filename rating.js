@@ -1,13 +1,7 @@
-<!-- Firebase App (from your config) -->
-<script type="module">
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, get, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDWqWfKWRY7nxZTIXxgV1j_baHY0m8F_Ng",
   authDomain: "dbest-rating.firebaseapp.com",
@@ -19,49 +13,38 @@ const firebaseConfig = {
   measurementId: "G-9DSK5WTW62"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const analytics = getAnalytics(app);
 
-// Unique post ID
-const postId = "video1"; // change per video/post
+export function setupRatingSystem(postId) {
+  const container = document.getElementById(`rating-${postId}`);
+  if (!container) return;
 
-const ratingRef = ref(db, 'ratings/' + postId);
+  container.innerHTML = '';
+  const stars = [];
 
-// DOM
-const stars = document.querySelectorAll(".star");
-const avgDisplay = document.getElementById("avg-rating");
-
-let userRated = false;
-
-// Handle star click
-stars.forEach((star, index) => {
-  star.addEventListener("click", () => {
-    if (userRated) return;
-    const rating = index + 1;
-    set(ratingRef, {
-      rating: rating,
-      timestamp: Date.now()
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('span');
+    star.textContent = '☆';
+    star.style.cursor = 'pointer';
+    star.style.fontSize = '2rem';
+    star.addEventListener('click', () => {
+      set(ref(db, `ratings/${postId}`), {
+        rating: i,
+        timestamp: Date.now()
+      });
     });
-    userRated = true;
-    updateStars(rating);
-  });
-});
+    container.appendChild(star);
+    stars.push(star);
+  }
 
-// Display stars visually
-function updateStars(value) {
-  stars.forEach((s, i) => {
-    s.textContent = i < value ? "★" : "☆";
+  const ratingRef = ref(db, `ratings/${postId}`);
+  onValue(ratingRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.rating) {
+      stars.forEach((s, i) => {
+        s.textContent = i < data.rating ? '★' : '☆';
+      });
+    }
   });
 }
-
-// Listen to rating value from Firebase
-onValue(ratingRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    updateStars(data.rating);
-    avgDisplay.textContent = `Rating: ${data.rating} / 5`;
-  }
-});
-</script>
