@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, runTransaction, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -16,50 +16,82 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-
-  export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
+export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
   const container = document.getElementById(`rating-${postId}`);
   if (!container) return;
 
-  // ... your existing star HTML and event setup ...
-
-  const ratingRef = ref(db, `ratings/${postId}`);
-
-  get(ratingRef).then(snapshot => {
-    if (!snapshot.exists() && initialVotes && initialSum) {
-      set(ratingRef, { votes: initialVotes, sum: initialSum }).then(() => {
-        updateDisplay({ votes: initialVotes, sum: initialSum });
-      });
-    } else {
-      updateDisplay(snapshot.val());
-    }
-  });
-
   container.innerHTML = '';
+
+  // Create stars container
+  const starsDiv = document.createElement('div');
+  starsDiv.style.userSelect = "none";
+  container.appendChild(starsDiv);
+
+  // Create info div for average and votes
+  const infoDiv = document.createElement('div');
+  infoDiv.style.marginTop = '5px';
+  infoDiv.style.color = '#ccc';
+  infoDiv.style.fontSize = '0.9rem';
+  container.appendChild(infoDiv);
+
   const stars = [];
 
+  // Create 5 stars
   for (let i = 1; i <= 5; i++) {
     const star = document.createElement('span');
     star.textContent = '☆';
     star.style.cursor = 'pointer';
     star.style.fontSize = '2rem';
+    star.style.color = '#00ff99';
+    star.style.marginRight = '3px';
+
     star.addEventListener('click', () => {
-      set(ref(db, `ratings/${postId}`), {
-        rating: i,
-        timestamp: Date.now()
-      });
+      const ratingRef = ref(db, `ratings/${postId}`);
+
+      runTransaction(ratingRef, current => {
+        if (current === null) {
+          // initialize with your initial votes and sum + this vote
+          return {
+            votes: initialVotes + 1,
+            sum: initialSum + i
+          };
+        }
+        return {
+          votes: current.votes + 1,
+          sum: current.sum + i
+        };
+      }).catch(console.error);
     });
-    container.appendChild(star);
+
+    starsDiv.appendChild(star);
     stars.push(star);
   }
 
   const ratingRef = ref(db, `ratings/${postId}`);
+
+  // Initialize Firebase data if not exists
+  get(ratingRef).then(snapshot => {
+    if (!snapshot.exists() && initialVotes && initialSum) {
+      set(ratingRef, { votes: initialVotes, sum: initialSum });
+    }
+  });
+
+  // Listen for changes to update UI
   onValue(ratingRef, (snapshot) => {
     const data = snapshot.val();
-    if (data && data.rating) {
-      stars.forEach((s, i) => {
-        s.textContent = i < data.rating ? '★' : '☆';
+
+    if (data && data.votes && data.sum) {
+      const avg = data.sum / data.votes;
+      const rounded = Math.round(avg);
+      stars.forEach((star, idx) => {
+        star.textContent = idx < rounded ? '★' : '☆';
       });
+
+      infoDiv.textContent = `Average: ${avg.toFixed(1)} ★ (${data.votes} vote${data.votes > 1 ? 's' : ''})`;
+    } else {
+      // no data yet
+      stars.forEach(s => s.textContent = '☆');
+      infoDiv.textContent = "No ratings yet";
     }
   });
 }
