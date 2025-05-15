@@ -76,3 +76,24 @@ video {
   color: #00ff99;
   margin-top: 0.5rem;
 }
+.pagination-controls {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.pagination-controls button {
+  margin: 0 0.3rem;
+  padding: 0.5rem 1rem;
+  background: #00ff99;
+  color: #121212;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination-controls button.active {
+  font-weight: bold;
+  background: #ffffff;
+  color: #00ff99;
+}
+
