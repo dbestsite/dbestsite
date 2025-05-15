@@ -1,24 +1,30 @@
-// adBanner.js
 export function insertBannerAd(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // Clear any existing content
-  container.innerHTML = '';
+  container.innerHTML = ''; // clear
 
-  // Insert the ad script with config
-  window.atOptions = {
-    key: '5a944efcf8c1ae5899ea4d3ccf62e6a1',
-    format: 'iframe',
-    height: 250,
-    width: 300,
-    params: {}
-  };
+  // Create an iframe to isolate each ad instance
+  const iframe = document.createElement('iframe');
+  iframe.width = 300;
+  iframe.height = 250;
+  iframe.style.border = 'none';
+  container.appendChild(iframe);
 
-  // Create the script element to load the ad
-  const script = document.createElement('script');
-  script.src = '//swollenbasis.com/5a944efcf8c1ae5899ea4d3ccf62e6a1/invoke.js';
-  script.async = true;
-
-  container.appendChild(script);
+  // Write the ad script inside the iframe
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(`
+    <script>
+      window.atOptions = {
+        key: '5a944efcf8c1ae5899ea4d3ccf62e6a1',
+        format: 'iframe',
+        height: 250,
+        width: 300,
+        params: {}
+      };
+    <\/script>
+    <script src="//swollenbasis.com/5a944efcf8c1ae5899ea4d3ccf62e6a1/invoke.js" async><\/script>
+  `);
+  doc.close();
 }
