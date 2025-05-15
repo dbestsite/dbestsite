@@ -16,78 +16,103 @@
   <main>
     <div id="tag-filter"></div>
     <div id="video-container" class="grid"></div>
+    <div id="pagination" class="pagination-controls"></div>
   </main>
 
   <script type="module">
+    import { setupRatingSystem } from './rating.js';
+
+    const videoContainer = document.getElementById("video-container");
+    const searchInput = document.getElementById("search");
+    const tagFilter = document.getElementById("tag-filter");
+    const pagination = document.getElementById("pagination");
+
     let videoData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const videosPerPage = 5;
+    let activeTag = null;
 
-fetch('videos.json')
-  .then(response => response.json())
-  .then(data => {
-    videoData = data;
-    initSite();
-  })
-  .catch(err => {
-    console.error('Failed to load video data:', err);
-  });
+    fetch('videos.json')
+      .then(res => res.json())
+      .then(data => {
+        // Sort newest first
+        videoData = data.reverse();
+        initFilters();
+        applyFilters();
+      });
 
-function initSite() {
-  const videoContainer = document.getElementById("video-container");
-  const searchInput = document.getElementById("search");
-  const tagFilter = document.getElementById("tag-filter");
+    function initFilters() {
+      const allTags = [...new Set(videoData.flatMap(v => v.tags))];
 
-  const allTags = [...new Set(videoData.flatMap(v => v.tags))];
-  let activeTag = null;
+      allTags.forEach(tag => {
+        const btn = document.createElement("button");
+        btn.textContent = tag;
+        btn.onclick = () => {
+          activeTag = activeTag === tag ? null : tag;
+          applyFilters();
+        };
+        tagFilter.appendChild(btn);
+      });
 
-  allTags.forEach(tag => {
-    const btn = document.createElement("button");
-    btn.textContent = tag;
-    btn.onclick = () => {
-      activeTag = activeTag === tag ? null : tag;
-      renderVideos();
-    };
-    tagFilter.appendChild(btn);
-  });
+      searchInput.addEventListener("input", () => {
+        applyFilters();
+      });
+    }
 
-  searchInput.addEventListener("input", renderVideos);
-
-  function renderVideos() {
-    const term = searchInput.value.toLowerCase();
-    videoContainer.innerHTML = "";
-    videoData
-      .filter(v =>
+    function applyFilters() {
+      const term = searchInput.value.toLowerCase();
+      filteredData = videoData.filter(v =>
         v.title.toLowerCase().includes(term) &&
         (!activeTag || v.tags.includes(activeTag))
-      )
-      .forEach(createVideoCard);
-  }
+      );
 
-  function createVideoCard(video) {
-    const card = document.createElement("div");
-    card.className = "video-card";
+      currentPage = 1;
+      renderPagination();
+      renderVideos();
+    }
 
-    card.innerHTML = `
-      <h3>${video.title}</h3>
-      <video src="${video.url}" controls controlsList="nodownload" playsinline></video>
-      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-    `;
+    function renderPagination() {
+      pagination.innerHTML = "";
+      const totalPages = Math.ceil(filteredData.length / videosPerPage);
 
-    videoContainer.appendChild(card);
-    setupRatingSystem(video.postId);
-  }
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = i === currentPage ? "active" : "";
+        btn.onclick = () => {
+          currentPage = i;
+          renderVideos();
+          renderPagination();
+        };
+        pagination.appendChild(btn);
+      }
+    }
 
-  renderVideos();
-}
+    function renderVideos() {
+      videoContainer.innerHTML = "";
+      const start = (currentPage - 1) * videosPerPage;
+      const end = start + videosPerPage;
+      const pageVideos = filteredData.slice(start, end);
 
+      pageVideos.forEach(video => {
+        const card = document.createElement("div");
+        card.className = "video-card";
+
+        card.innerHTML = `
+          <h3>${video.title}</h3>
+          <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
+          <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+        `;
+
+        videoContainer.appendChild(card);
+        setupRatingSystem(video.postId);
+      });
+    }
+
+    // Disable right click globally
+    document.addEventListener("contextmenu", e => e.preventDefault());
   </script>
-  <script>
-  document.addEventListener("contextmenu", e => e.preventDefault());
-  document.querySelectorAll("video").forEach(video => {
-    video.setAttribute("controlsList", "nodownload");
-    video.addEventListener("contextmenu", e => e.preventDefault());
-  });
-</script>
-
 </body>
 </html>
