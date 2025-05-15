@@ -14,8 +14,14 @@
   </header>
   
   <main>
-    <div id="tag-filter"></div><div id="ad1" style="text-align: center;"></div>
-    <div id="video-container" class="grid"></div><div id="ad2"></div><div id="ad3"></div>
+    <div id="tag-filter"></div>
+	  <div style="text-align: center; display: grid;">
+		  <div id="ad1"></div><div id="ad2"></div>
+	  </div>
+    <div id="video-container" class="grid"></div>
+	  <div style="text-align: center; display: grid;">
+		  <div id="ad3"></div><div id="ad4"></div>
+	  </div>
     <div id="pagination" class="pagination-controls"></div>
   </main>
 
@@ -28,6 +34,7 @@
   // Insert banner ads in multiple places if you want
   insertBannerAd('ad1');
   insertBannerAd('ad2');  // duplicate in another container
+  insertBannerAd('ad3');
   insertBannerAd('ad3');
 </script>
 
