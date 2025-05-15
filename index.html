@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Video Streaming Platform</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+    background: #121212;
+    color: #eee;
+  }
+  #searchBar {
+    padding: 0.5rem;
+    width: 300px;
+    margin-bottom: 1rem;
+  }
+  #tagsFilter {
+    margin-bottom: 1rem;
+  }
+  button.tag-btn {
+    margin: 0.25rem;
+    padding: 0.3rem 0.7rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #444;
+    color: #eee;
+  }
+  button.tag-btn.active {
+    background: #1db954;
+  }
+  #videoList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .video-item {
+    background: #222;
+    border-radius: 6px;
+    padding: 0.5rem;
+    width: 300px;
+  }
+  .video-item video {
+    width: 100%;
+    height: auto;
+    outline: none;
+    user-select: none;
+  }
+  .video-title {
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h1>Video Streaming Platform</h1>
+
+<input type="text" id="searchBar" placeholder="Search videos by title..." autocomplete="off" />
+
+<div id="tagsFilter"></div>
+
+<div id="videoList"></div>
+
+<script>
+// Fetch videos metadata JSON
+const videosURL = 'videos.json';
+let videos = [];
+let filteredVideos = [];
+let selectedTags = new Set();
+
+const searchInput = document.getElementById('searchBar');
+const tagsFilterDiv = document.getElementById('tagsFilter');
+const videoListDiv = document.getElementById('videoList');
+
+// Disable context menu and right click globally
+document.addEventListener('contextmenu', e => e.preventDefault());
+// Disable long press on mobile by disabling touch context menu
+document.addEventListener('touchstart', e => {
+  if (e.touches.length > 1) e.preventDefault();
+  // Disable long press (context menu) on touch devices
+  window.oncontextmenu = () => false;
+}, { passive: false });
+
+// Prevent keyboard shortcuts for saving video (Ctrl+S, Ctrl+Shift+I, etc.)
+document.addEventListener('keydown', (e) => {
+  if (
+    (e.ctrlKey && e.key.toLowerCase() === 's') ||  // Ctrl+S save
+    (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'i') || // DevTools
+    (e.key === 'F12')  // DevTools
+  ) {
+    e.preventDefault();
+  }
+});
+
+function createVideoElement(videoData) {
+  const container = document.createElement('div');
+  container.classList.add('video-item');
+
+  const video = document.createElement('video');
+  video.src = `videos/${videoData.filename}`;
+  video.controls = true;
+
+  // Disable download by hiding native controls download option (partial solution)
+  video.controlsList = "nodownload nofullscreen noremoteplayback";
+  video.setAttribute('disablePictureInPicture', '');
+  video.setAttribute('playsinline', '');
+
+  // Prevent right click on video itself
+  video.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Disable keyboard shortcuts on video
+  video.addEventListener('keydown', e => e.preventDefault());
+
+  // Block long press on video
+  video.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+
+  // Video title
+  const title = document.createElement('div');
+  title.classList.add('video-title');
+  title.textContent = videoData.title;
+
+  container.appendChild(video);
+  container.appendChild(title);
+  return container;
+}
+
+function renderVideos(videosToRender) {
+  videoListDiv.innerHTML = '';
+  if (videosToRender.length === 0) {
+    videoListDiv.textContent = 'No videos found.';
+    return;
+  }
+  videosToRender.forEach(video => {
+    const el = createVideoElement(video);
+    videoListDiv.appendChild(el);
+  });
+}
+
+function getUniqueTags(videos) {
+  const tagsSet = new Set();
+  videos.forEach(v => {
+    v.tags.forEach(tag => tagsSet.add(tag));
+  });
+  return Array.from(tagsSet).sort();
+}
+
+function renderTagButtons(tags) {
+  tagsFilterDiv.innerHTML = '';
+  tags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.textContent = tag;
+    btn.classList.add('tag-btn');
+    btn.addEventListener('click', () => {
+      if (selectedTags.has(tag)) {
+        selectedTags.delete(tag);
+        btn.classList.remove('active');
+      } else {
+        selectedTags.add(tag);
+        btn.classList.add('active');
+      }
+      applyFilters();
+    });
+    tagsFilterDiv.appendChild(btn);
+  });
+}
+
+function applyFilters() {
+  const searchTerm = searchInput.value.toLowerCase();
+  filteredVideos = videos.filter(video => {
+    const matchesSearch = video.title.toLowerCase().includes(searchTerm);
+    const matchesTags = selectedTags.size === 0 || video.tags.some(t => selectedTags.has(t));
+    return matchesSearch && matchesTags;
+  });
+  renderVideos(filteredVideos);
+}
+
+async function init() {
+  try {
+    const response = await fetch(videosURL);
+    if (!response.ok) throw new Error('Failed to load videos metadata');
+    videos = await response.json();
+    filteredVideos = [...videos];
+
+    renderTagButtons(getUniqueTags(videos));
+    renderVideos(filteredVideos);
+
+    searchInput.addEventListener('input', () => applyFilters());
+  } catch (error) {
+    videoListDiv.textContent = 'Error loading videos.';
+    console.error(error);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
