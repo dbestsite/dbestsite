@@ -52,7 +52,7 @@ main {
 .adgrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-  gap: 0.5rem; text-align: center;
+  gap: 3px; text-align: center;
 }
 
 .video-card {
