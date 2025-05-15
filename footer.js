@@ -37,12 +37,12 @@ export function setupFooterPopup() {
     `,
     "Contact": `
       <h2>Contact Us</h2>
-      <p>If you have concerns or inquiries regarding the contents on our site such as: 
-      a request to take down a content,<br>
-      request a proper credit to you/owner,<br>
-      advertise your business,<br>
-      submit a content, <br>
-      donate, or<br> 
+      <p>If you have concerns or inquiries regarding the contents on our site such as: <br>
+      &nbsp;&nbsp;a request to take down a content,<br>
+      &nbsp;&nbsp;request a proper credit to you/owner,<br>
+      &nbsp;&nbsp;advertise your business,<br>
+      &nbsp;&nbsp;submit a content, <br>
+      &nbsp;&nbsp;donate, or<br> 
       whatever reasons you have, please feel free to reach us at the following contact details.
       </p>
       <ul>
