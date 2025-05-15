@@ -20,6 +20,24 @@ export function setupRatingSystem(postId) {
   const container = document.getElementById(`rating-${postId}`);
   if (!container) return;
 
+  export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
+  const container = document.getElementById(`rating-${postId}`);
+  if (!container) return;
+
+  // ... your existing star HTML and event setup ...
+
+  const ratingRef = ref(db, `ratings/${postId}`);
+
+  get(ratingRef).then(snapshot => {
+    if (!snapshot.exists() && initialVotes && initialSum) {
+      set(ratingRef, { votes: initialVotes, sum: initialSum }).then(() => {
+        updateDisplay({ votes: initialVotes, sum: initialSum });
+      });
+    } else {
+      updateDisplay(snapshot.val());
+    }
+  });
+
   container.innerHTML = '';
   const stars = [];
 
