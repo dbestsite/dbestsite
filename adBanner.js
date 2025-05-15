@@ -7,7 +7,7 @@ export function insertBannerAd(containerId) {
   // Create an iframe to isolate each ad instance
   const iframe = document.createElement('iframe');
   iframe.width = 310;
-  iframe.height = 260;
+  iframe.height = 270;
   iframe.style.border = 'none';
   container.appendChild(iframe);
 
