@@ -68,7 +68,7 @@ function initSite() {
 
     card.innerHTML = `
       <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline></video>
+      <video src="${video.url}" controls controlsList="nodownload" playsinline></video>
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
@@ -80,55 +80,6 @@ function initSite() {
   renderVideos();
 }
 
-
-    const videoContainer = document.getElementById("video-container");
-    const searchInput = document.getElementById("search");
-    const tagFilter = document.getElementById("tag-filter");
-
-    // Collect all tags
-    const allTags = [...new Set(videoData.flatMap(v => v.tags))];
-    let activeTag = null;
-
-    // Tag filter buttons
-    allTags.forEach(tag => {
-      const btn = document.createElement("button");
-      btn.textContent = tag;
-      btn.onclick = () => {
-        activeTag = activeTag === tag ? null : tag;
-        renderVideos();
-      };
-      tagFilter.appendChild(btn);
-    });
-
-    searchInput.addEventListener("input", renderVideos);
-
-    function renderVideos() {
-      const term = searchInput.value.toLowerCase();
-      videoContainer.innerHTML = "";
-      videoData
-        .filter(v =>
-          v.title.toLowerCase().includes(term) &&
-          (!activeTag || v.tags.includes(activeTag))
-        )
-        .forEach(createVideoCard);
-    }
-
-    function createVideoCard(video) {
-      const card = document.createElement("div");
-      card.className = "video-card";
-
-      card.innerHTML = `
-        <h3>${video.title}</h3>
-        <video src="${video.url}" controls playsinline></video>
-        <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-        <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-      `;
-
-      videoContainer.appendChild(card);
-      setupRatingSystem(video.postId);
-    }
-
-    renderVideos();
   </script>
   <script>
   document.addEventListener("contextmenu", e => e.preventDefault());
