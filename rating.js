@@ -16,9 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-export function setupRatingSystem(postId) {
-  const container = document.getElementById(`rating-${postId}`);
-  if (!container) return;
 
   export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
   const container = document.getElementById(`rating-${postId}`);
