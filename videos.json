@@ -11,12 +11,16 @@
     "title": "External Video 2",
     "url": "https://files.catbox.moe/npqdzx.mp4",
     "tags": ["music", "live"],
-    "postId": "video2"
+    "postId": "video2",
+    "votes": 11512,
+    "sum": 42
   },
   {
     "title": "External Video 3",
     "url": "https://files.catbox.moe/npqdzx.mp4",
     "tags": ["lecture", "history"],
-    "postId": "video3"
+    "postId": "video3",
+    "votes": 11512,
+    "sum": 42
   }
 ]
