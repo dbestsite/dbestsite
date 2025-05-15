@@ -107,7 +107,8 @@
         `;
 
         videoContainer.appendChild(card);
-        setupRatingSystem(video.postId);
+        setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
+
       });
     }
 
