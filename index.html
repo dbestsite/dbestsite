@@ -104,7 +104,7 @@ function createVideoElement(videoData) {
   video.controls = true;
 
   // Disable download by hiding native controls download option (partial solution)
-  video.controlsList = "nodownload nofullscreen noremoteplayback";
+  video.controlsList = "nodownload noremoteplayback";
   video.setAttribute('disablePictureInPicture', '');
   video.setAttribute('playsinline', '');
 
