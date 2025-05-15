@@ -22,21 +22,33 @@ export function setupFooterPopup() {
   const detailsContent = {
     "Privacy Policy": `
       <h2>Privacy Policy</h2>
-      <p>Your privacy is important to us. We do not collect personal data without your consent. We use cookies only to improve your browsing experience.</p>
-      <p>[Add more detailed privacy info here]</p>
+      <p>Your privacy is important to us.</p>
+      <p><b>BY USING OUR SITE, YOU AGREE TO THE FOLLOWING PRIVACY POLICY:</b></p>
+      <p>We use cookies only to improve your browsing experience.</p>
+      <p>We collect the data you input when you rate any of our videos as part of keeping up our services.</p>
+      <br>
+      <p>Overall, we do not collect personal data (i.e. name, address, email, etc.) without your consent unless you reach us through our contact information.</p>
     `,
-    "Terms of Service": `
-      <h2>Terms of Service</h2>
-      <p>By using D' Best Site, you agree to our terms and conditions, including respecting copyright laws and not misusing content.</p>
-      <p>[Add full terms text here]</p>
+    "About Us": `
+      <h2>About Us</h2>
+      <p><b>D' Best Site</b> publishes a collection of adult videos from random individuals online. These videos are primarily, but not limited to, Gay and Solo Porns. Videos here are published publicly by their respective original owners and that we do not filmed them secretly. Videos here are 100% NOT our own and only belongs to their respective owners.</p>
+      <p>If you think one of the videos uploaded here is yours and wants to take it down, please feel free to navigate to the 'Contact Us' menu for more details.</p>
+      <p>Feel free to use our site as your go-to site for adult entertainment. Support us by sharing our site with your friends.</p>
     `,
     "Contact": `
       <h2>Contact Us</h2>
-      <p>You can reach us at:</p>
+      <p>If you have concerns or inquiries regarding the contents on our site such as: 
+      a request to take down a content,<br>
+      request a proper credit to you/owner,<br>
+      advertise your business,<br>
+      submit a content, <br>
+      donate, or<br> 
+      whatever reasons you have, please feel free to reach us at the following contact details.
+      </p>
       <ul>
-        <li>Email: support@dbestsite.com</li>
-        <li>Phone: +1 (555) 123-4567</li>
-        <li>Address: 123 Green St., Nature City</li>
+        <li>Email: contact.mainaddr@gmail.com</li>
+        <li>Phone: Not available</li>
+        <li>Address: Not available</li>
       </ul>
       <p>We’d love to hear from you!</p>
     `
