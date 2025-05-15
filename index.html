@@ -100,7 +100,7 @@ function createVideoElement(videoData) {
   container.classList.add('video-item');
 
   const video = document.createElement('video');
-  video.src = `videos/${videoData.filename}`;
+  video.src = videoData.url; // use full URL now
   video.controls = true;
 
   // Disable download by hiding native controls download option (partial solution)
