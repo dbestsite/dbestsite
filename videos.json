@@ -1,0 +1,12 @@
+[
+  {
+    "title": "External Video 1",
+    "url": "https://example.com/videos/video1.mp4",
+    "tags": ["tutorial", "javascript"]
+  },
+  {
+    "title": "External Video 2",
+    "url": "https://cdn.example.com/media/musicvideo.mp4",
+    "tags": ["music", "live"]
+  }
+]
