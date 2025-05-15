@@ -64,6 +64,28 @@
 
 <div id="videoList"></div>
 
+  <div id="rating-box">
+  <span class="star">☆</span>
+  <span class="star">☆</span>
+  <span class="star">☆</span>
+  <span class="star">☆</span>
+  <span class="star">☆</span>
+  <div id="avg-rating">Rating: –</div>
+</div>
+
+<style>
+  #rating-box {
+    font-size: 2rem;
+    color: gold;
+    cursor: pointer;
+  }
+  .star:hover,
+  .star:hover ~ .star {
+    color: orange;
+  }
+</style>
+
+
 <script>
 // Fetch videos metadata JSON
 const videosURL = 'videos.json';
