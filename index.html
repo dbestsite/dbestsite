@@ -64,27 +64,6 @@
 
 <div id="videoList"></div>
 
-  <div id="rating-box">
-  <span class="star">☆</span>
-  <span class="star">☆</span>
-  <span class="star">☆</span>
-  <span class="star">☆</span>
-  <span class="star">☆</span>
-  <div id="avg-rating">Rating: –</div>
-</div>
-
-<style>
-  #rating-box {
-    font-size: 2rem;
-    color: gold;
-    cursor: pointer;
-  }
-  .star:hover,
-  .star:hover ~ .star {
-    color: orange;
-  }
-</style>
-
 
 <script>
 // Fetch videos metadata JSON
@@ -148,8 +127,6 @@ function createVideoElement(videoData) {
   container.appendChild(title);
   return container;
 
-  const postId = videoData.postId;
-setupRatingSystem(postId); // You write this function using Firebase
 
 }
 
