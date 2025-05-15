@@ -150,20 +150,19 @@
     // Disable right click globally
     document.addEventListener("contextmenu", e => e.preventDefault());
 
-    let lastScrollY = window.scrollY;
+    function checkVideoVisibility() {
+  document.querySelectorAll("video").forEach(video => {
+    const rect = video.getBoundingClientRect();
+    const videoHeight = rect.height;
+    const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2);
 
-window.addEventListener("scroll", () => {
-  const currentScrollY = window.scrollY;
+    if (scrolledOut && !video.paused) {
+      video.pause();
+    }
+  });
+}
 
-  // Only stop if user scrolls **down**
-  if (currentScrollY > lastScrollY) {
-    document.querySelectorAll("video").forEach(video => {
-      if (!video.paused) video.pause();
-    });
-  }
-
-  lastScrollY = currentScrollY;
-});
+window.addEventListener("scroll", checkVideoVisibility);
   </script>
 </body>
 </html>
