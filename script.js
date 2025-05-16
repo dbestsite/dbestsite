@@ -137,6 +137,7 @@ document.body.addEventListener("click", e => {
   if (e.target.classList.contains("comment-btn")) {
     activePostId = e.target.dataset.postid;
     loadComments(activePostId);
+    loadSavedUserName();    // <-- call here
     modal.classList.remove("hidden");
   }
 });
@@ -152,6 +153,8 @@ commentForm.addEventListener("submit", e => {
   const text = textInput.value.trim();
   if (!name || !text) return;
 
+  // Save username to localStorage after first submission
+localStorage.setItem('commentUserName', name);
   localStorage.setItem("dbest_username", name);
   const commentRef = ref(db, `comments/${activePostId}`);
   push(commentRef, {
@@ -163,6 +166,18 @@ commentForm.addEventListener("submit", e => {
   });
   commentForm.reset();
 });
+
+function loadSavedUserName() {
+  const savedName = localStorage.getItem('commentUserName');
+  const nameInput = document.getElementById('comment-name');
+  if (savedName) {
+    nameInput.value = savedName;
+    nameInput.disabled = true; // lock the name input after first input
+  } else {
+    nameInput.value = '';
+    nameInput.disabled = false;
+  }
+}
 
 function loadComments(postId) {
   const commentRef = ref(db, `comments/${postId}`);
