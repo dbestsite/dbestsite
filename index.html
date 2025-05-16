@@ -162,13 +162,15 @@
     `;
 
   
-addCommentButtons();
+
 
     videoContainer.appendChild(card);
 
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
   });
+	     addCommentButtons();
 }
+	 
 
     // Disable right click globally
     document.addEventListener("contextmenu", e => e.preventDefault());
