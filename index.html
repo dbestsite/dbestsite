@@ -168,7 +168,7 @@
 
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
   });
-	     addCommentButtons();
+	    
 }
 	 
 
@@ -190,20 +190,6 @@
 window.addEventListener("scroll", checkVideoVisibility);
   </script>
 
-	<script type="module">
-  import { attachCommentFeature } from './comment.js';
-
-  window.addCommentButtons = function () {
-    const cards = document.querySelectorAll(".video-card");
-    const videos = window.filteredData || [];
-    cards.forEach((card, i) => {
-      const video = videos[i];
-      if (!card.querySelector("button")) {
-        attachCommentFeature(card, video.postId);
-      }
-    });
-  };
-</script>
 
 </body>
 </html>
