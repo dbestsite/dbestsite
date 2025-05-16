@@ -155,28 +155,34 @@
     }
 
     function renderVideos() {
-      videoContainer.innerHTML = "";
-      const start = (currentPage - 1) * videosPerPage;
-      const end = start + videosPerPage;
-      const pageVideos = filteredData.slice(start, end);
+  videoContainer.innerHTML = "";
+  const start = (currentPage - 1) * videosPerPage;
+  const end = start + videosPerPage;
+  const pageVideos = filteredData.slice(start, end);
 
-      pageVideos.forEach(video => {
-        const card = document.createElement("div");
-        card.className = "video-card";
+  pageVideos.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "video-card";
 
-        card.innerHTML = `
-          <h3>${video.title}</h3>
-          <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
-          <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-	  
-        `;
+    card.innerHTML = `
+      <h3>${video.title}</h3>
+      <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
+      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
 
-        videoContainer.appendChild(card);
-        setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
+    // ✅ Add Comments Button
+    const commentBtn = document.createElement("button");
+    commentBtn.textContent = "Comments";
+    commentBtn.classList.add("open-comments-btn");
+    commentBtn.dataset.postId = video.postId;
+    card.appendChild(commentBtn);
 
-      });
-    }
+    videoContainer.appendChild(card);
+
+    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
+  });
+}
 
     // Disable right click globally
     document.addEventListener("contextmenu", e => e.preventDefault());
