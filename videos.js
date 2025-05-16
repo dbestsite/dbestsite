@@ -1,9 +1,4 @@
 
-const commentBtn = document.createElement('button');
-commentBtn.textContent = 'Comments';
-commentBtn.classList.add('open-comments-btn');
-commentBtn.dataset.postId = video.postId;
-container.appendChild(commentBtn); // where `container` is your video block
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import {
