@@ -192,11 +192,50 @@ function loadComments(postId) {
   onValue(commentRef, snapshot => {
     commentList.innerHTML = "";
     const comments = snapshot.val();
-    if (comments) {
-      commentList.appendChild(renderCommentsTree(comments));
-    } else {
+
+    if (!comments) {
       commentList.innerHTML = "<p>No comments yet.</p>";
+      return;
     }
+
+    // Convert object to array with keys for nested replies
+    const commentsArray = Object.entries(comments).map(([id, comment]) => ({ id, ...comment }));
+
+    // Separate top-level comments and replies
+    const topComments = commentsArray.filter(c => !c.parentId);
+    const replies = commentsArray.filter(c => c.parentId);
+
+    // Sort oldest first
+    topComments.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Helper to get replies for a comment
+    function getReplies(commentId) {
+      return replies
+        .filter(r => r.parentId === commentId)
+        .sort((a, b) => a.timestamp - b.timestamp);
+    }
+
+    // Render comments with replies recursively
+    function renderComment(comment, container, level = 0) {
+      const div = document.createElement("div");
+      div.style.marginLeft = `${level * 20}px`;
+      div.classList.add("comment-item");
+
+      div.innerHTML = `
+        <strong>${comment.name}</strong> <small>${new Date(comment.timestamp).toLocaleString()}</small>
+        <p>${comment.text}</p>
+        <button class="reply-btn" data-id="${comment.id}" data-name="${comment.name}">Reply</button>
+        <button class="like-btn" data-id="${comment.id}">Like (<span class="like-count">${comment.likes || 0}</span>)</button>
+        <hr/>
+      `;
+      container.appendChild(div);
+
+      // Render replies
+      const childReplies = getReplies(comment.id);
+      childReplies.forEach(reply => renderComment(reply, container, level + 1));
+    }
+
+    topComments.forEach(comment => renderComment(comment, commentList));
   });
 }
 
