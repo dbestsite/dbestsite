@@ -96,23 +96,34 @@
         applyFilters();
       });
 
-    function initFilters() {
-      const allTags = [...new Set(videoData.flatMap(v => v.tags))];
+   function initFilters() {
+  const allTags = [...new Set(videoData.flatMap(v => v.tags))];
 
-      allTags.forEach(tag => {
-        const btn = document.createElement("button");
-        btn.textContent = tag;
-        btn.onclick = () => {
-          activeTag = activeTag === tag ? null : tag;
-          applyFilters();
-        };
-        tagFilter.appendChild(btn);
+  allTags.forEach(tag => {
+    const btn = document.createElement("button");
+    btn.textContent = tag;
+
+    btn.onclick = () => {
+      // Toggle active tag
+      activeTag = activeTag === tag ? null : tag;
+
+      // Update all buttons to reflect active state
+      document.querySelectorAll("#tag-filter button").forEach(b => {
+        b.classList.toggle("active", b.textContent === activeTag);
       });
 
-      searchInput.addEventListener("input", () => {
-        applyFilters();
-      });
-    }
+      applyFilters();
+    };
+
+    tagFilter.appendChild(btn);
+  });
+
+  // Enable search filter
+  searchInput.addEventListener("input", () => {
+    applyFilters();
+  });
+}
+
 
     function applyFilters() {
       const term = searchInput.value.toLowerCase();
