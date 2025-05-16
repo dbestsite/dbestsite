@@ -1,7 +1,7 @@
 // script.js
 
 import { setupRatingSystem } from './rating.js';
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 
 // Firebase config
@@ -24,10 +24,134 @@ const searchInput = document.getElementById("search");
 const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
+
 const modal = document.getElementById("comment-modal");
 const commentList = document.getElementById("comment-list");
 const closeBtn = document.getElementById("close-comments");
 const commentForm = document.getElementById("comment-form");
+const nameInput = document.getElementById("comment-name");
+const textInput = document.getElementById("comment-text");
+let activePostId = null;
+let username = localStorage.getItem("username") || "";
+
+// Lock name after first use
+if (username) {
+  nameInput.value = username;
+  nameInput.disabled = true;
+}
+
+document.body.addEventListener("click", e => {
+  if (e.target.classList.contains("comment-btn")) {
+    activePostId = e.target.dataset.postid;
+    loadComments(activePostId);
+    modal.classList.remove("hidden");
+  }
+
+  if (e.target.classList.contains("reply-btn")) {
+    const name = e.target.dataset.name;
+    const parentId = e.target.dataset.parentid;
+    textInput.value = `@${name} `;
+    textInput.dataset.replyto = parentId;
+    textInput.focus();
+  }
+
+  if (e.target.classList.contains("like-btn")) {
+    const cid = e.target.dataset.cid;
+    toggleLike(activePostId, cid);
+  }
+});
+
+closeBtn.onclick = () => {
+  modal.classList.add("hidden");
+  textInput.dataset.replyto = "";
+};
+
+commentForm.onsubmit = e => {
+  e.preventDefault();
+  const name = nameInput.value.trim();
+  const text = textInput.value.trim();
+  const replyTo = textInput.dataset.replyto || null;
+
+  if (!name || !text) return;
+
+  if (!localStorage.getItem("username")) {
+    localStorage.setItem("username", name);
+    nameInput.disabled = true;
+  }
+
+  const commentRef = ref(db, `comments/${activePostId}`);
+  push(commentRef, {
+    name,
+    text,
+    replyTo,
+    timestamp: Date.now(),
+    likes: 0
+  });
+
+  textInput.value = "";
+  textInput.dataset.replyto = "";
+};
+
+function loadComments(postId) {
+  const commentRef = ref(db, `comments/${postId}`);
+  onValue(commentRef, snap => {
+    commentList.innerHTML = "";
+    const data = snap.val();
+    if (!data) return;
+
+    const comments = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+    const rootComments = comments.filter(c => !c.replyTo);
+    const childMap = {};
+
+    comments.forEach(c => {
+      if (c.replyTo) {
+        if (!childMap[c.replyTo]) childMap[c.replyTo] = [];
+        childMap[c.replyTo].push(c);
+      }
+    });
+
+    rootComments
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .forEach(c => renderComment(c, childMap, 0));
+  });
+}
+
+function renderComment(comment, childMap, depth) {
+  const div = document.createElement("div");
+  div.className = "comment-item";
+  div.style.marginLeft = `${depth * 20}px`;
+
+  const liked = localStorage.getItem(`liked-${activePostId}-${comment.id}`) === "1";
+  const likeBtnLabel = liked ? "Unlike" : "Like";
+
+  div.innerHTML = `
+    <strong>${comment.name}</strong>: ${comment.text}<br>
+    <small>${new Date(comment.timestamp).toLocaleString()}</small><br>
+    <button class="reply-btn" data-name="${comment.name}" data-parentid="${comment.id}">Reply</button>
+    <button class="like-btn" data-cid="${comment.id}">${likeBtnLabel} (${comment.likes || 0})</button>
+    <hr>
+  `;
+
+  commentList.appendChild(div);
+
+  (childMap[comment.id] || [])
+    .sort((a, b) => a.timestamp - b.timestamp)
+    .forEach(reply => renderComment(reply, childMap, depth + 1));
+}
+
+function toggleLike(postId, cid) {
+  const key = `liked-${postId}-${cid}`;
+  const liked = localStorage.getItem(key) === "1";
+  const refPath = ref(db, `comments/${postId}/${cid}`);
+
+  onValue(refPath, snap => {
+    const data = snap.val();
+    if (!data) return;
+    const newLikes = liked ? (data.likes || 0) - 1 : (data.likes || 0) + 1;
+    update(refPath, { likes: newLikes });
+    localStorage.setItem(key, liked ? "0" : "1");
+  }, { onlyOnce: true });
+          }
 
 let videoData = [];
 let filteredData = [];
