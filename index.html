@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -12,281 +11,80 @@
   <header>
     <h1>D' Best Site</h1>
     <input type="text" id="search" placeholder="Search videos..." />
-  </header>
-  
-  <main>
-    
-	  <div class="adgrid">
-		  <div id="ad1"></div><div id="ad2"></div><div id="pcad1"></div><div id="pcad2"></div>
+  </header>  <main>
+    <div class="adgrid">
+      <div id="ad1"></div><div id="ad2"></div><div id="pcad1"></div><div id="pcad2"></div>
+    </div><div id="video-container" class="grid"></div>
 
-
-	  </div>
-    <div id="video-container" class="grid">
-	    
-    </div>
-	  
-	  <div class="adgrid">
-		  <div id="ad3"></div><div id="ad4"></div><div id="pcad3"></div><div id="pcad4"></div>
-	  </div>
-
-    <div id="pagination" class="pagination-controls"></div>
-	  <div id="tag-filter"></div>
-  </main>
-
-  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
-  <p>© 2025 D' Best Site. All rights reserved.</p>
-  <p>
-    <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">Privacy Policy</a> |
-    <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">About Us</a> |
-    <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">Contact</a>
-  </p>
-</footer>
-
-<div id="comment-modal" class="comment-modal hidden">
-  <div class="comment-content">
-    <button id="close-comments" class="close-btn">×</button>
-    <h2>Comments</h2>
-    <div id="comment-list"></div>
-    <form id="comment-form">
-      <input type="text" id="comment-name" placeholder="Your name" required />
-      <textarea id="comment-text" placeholder="Your comment" required></textarea>
-      <button type="submit">Post</button>
-    </form>
-  </div>
+<div class="adgrid">
+  <div id="ad3"></div><div id="ad4"></div><div id="pcad3"></div><div id="pcad4"></div>
 </div>
 
-<style>
-.comment-modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+<div id="pagination" class="pagination-controls"></div>
+<div id="tag-filter"></div>
 
-.comment-modal.hidden {
-  display: none;
-}
-
-.comment-content {
-  background: #1f2c29;
-  color: #b8f1d9;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  font-family: Arial, sans-serif;
-}
-
-#comment-list {
-  margin: 10px 0;
-  max-height: 300px;
-  overflow-y: auto;
-  border-top: 1px solid #555;
-  padding-top: 10px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px; right: 10px;
-  background: transparent;
-  color: #b8f1d9;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-</style>
-
-  	
-<script type="module">
-  import { setupFooterPopup } from './footer.js';
-  setupFooterPopup();
-</script>
-
-	
-<script type="module">
-  import { insertBannerAd } from './adBanner.js';
-
-  // Insert banner ads in multiple places if you want
-  insertBannerAd('ad1');
-  insertBannerAd('ad2');  // duplicate in another container
-  insertBannerAd('ad3');
-  insertBannerAd('ad4');
-</script>
-
-
-<script type="module">
-  import { insertBannerAd } from './pcAds.js';
-
-  window.addEventListener('DOMContentLoaded', () => {
-    ['pcad1', 'pcad2', 'pcad3','pcad4'].forEach(id => insertBannerAd(id));
-  });
-</script>
-
-	
-
-	
-  <script type="module">
-    import { setupRatingSystem } from './rating.js';
-
-    const videoContainer = document.getElementById("video-container");
-    const searchInput = document.getElementById("search");
-    const tagFilter = document.getElementById("tag-filter");
-    const pagination = document.getElementById("pagination");
-
-    let videoData = [];
-    let filteredData = [];
-    let currentPage = 1;
-    const videosPerPage = 5;
-    let activeTag = null;
-	  let selectedTags = new Set();
-
-
-    fetch('videos.json')
-      .then(res => res.json())
-      .then(data => {
-        // Sort newest first
-        videoData = data.reverse();
-        initFilters();
-        applyFilters();
-      });
-
-  function initFilters() {
-  const allTags = [...new Set(videoData.flatMap(v => v.tags))];
-
-  allTags.forEach(tag => {
-    const btn = document.createElement("button");
-    btn.textContent = tag;
-
-    btn.onclick = () => {
-      if (selectedTags.has(tag)) {
-        selectedTags.delete(tag);
-        btn.classList.remove("active");
-      } else {
-        selectedTags.add(tag);
-        btn.classList.add("active");
-      }
-
-      applyFilters();
-    };
-
-    tagFilter.appendChild(btn);
-  });
-
-  searchInput.addEventListener("input", applyFilters);
-}
-
-
-
-   function applyFilters() {
-  const term = searchInput.value.toLowerCase();
-  const selected = [...selectedTags];
-
-  filteredData = videoData.filter(v =>
-    v.title.toLowerCase().includes(term) &&
-    (selected.length === 0 || selected.every(tag => v.tags.includes(tag)))
-  );
-
-  currentPage = 1;
-  renderPagination();
-  renderVideos();
-}
-
-
-    function renderPagination() {
-      pagination.innerHTML = "";
-      const totalPages = Math.ceil(filteredData.length / videosPerPage);
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = i === currentPage ? "active" : "";
-        btn.onclick = () => {
-          currentPage = i;
-          renderVideos();
-          renderPagination();
-        };
-        pagination.appendChild(btn);
-      }
+  </main>  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
+    <p>© 2025 D' Best Site. All rights reserved.</p>
+    <p>
+      <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">Privacy Policy</a> |
+      <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">About Us</a> |
+      <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">Contact</a>
+    </p>
+  </footer>  <div id="comment-modal" class="comment-modal hidden">
+    <div class="comment-content">
+      <button id="close-comments" class="close-btn">×</button>
+      <h2>Comments</h2>
+      <div id="comment-list"></div>
+      <form id="comment-form">
+        <input type="text" id="comment-name" placeholder="Your name" required />
+        <textarea id="comment-text" placeholder="Your comment" required></textarea>
+        <button type="submit">Post</button>
+      </form>
+    </div>
+  </div>  <style>
+    .comment-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
-    function renderVideos() {
-  videoContainer.innerHTML = "";
-  const start = (currentPage - 1) * videosPerPage;
-  const end = start + videosPerPage;
-  const pageVideos = filteredData.slice(start, end);
-
-  pageVideos.forEach(video => {
-    const card = document.createElement("div");
-    card.className = "video-card";
-
-    card.innerHTML = `
-  <h3>${video.title}</h3>
-  <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
-  <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-  <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-  <button class="comment-btn" data-postid="${video.postId}">Comments</button>
-`;
-  
-
-
-    videoContainer.appendChild(card);
-
-    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
-  });
-	    
-}
-	 
-
-    // Disable right click globally
-    document.addEventListener("contextmenu", e => e.preventDefault());
-
-    function checkVideoVisibility() {
-  document.querySelectorAll("video").forEach(video => {
-    const rect = video.getBoundingClientRect();
-    const videoHeight = rect.height;
-    const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2);
-
-    if (scrolledOut && !video.paused) {
-      video.pause();
+    .comment-modal.hidden {
+      display: none;
     }
-  });
-}
 
-window.addEventListener("scroll", checkVideoVisibility);
+    .comment-content {
+      background: #1f2c29;
+      color: #b8f1d9;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      font-family: Arial, sans-serif;
+    }
 
-	  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    #comment-list {
+      margin: 10px 0;
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 1px solid #555;
+      padding-top: 10px;
+    }
 
-// Replace with your actual Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDWqWfKWRY7nxZTIXxgV1j_baHY0m8F_Ng",
-  authDomain: "dbest-rating.firebaseapp.com",
-  databaseURL: "https://dbest-rating-default-rtdb.firebaseio.com",
-  projectId: "dbest-rating",
-  storageBucket: "dbest-rating.appspot.com",
-  messagingSenderId: "951177510571",
-  appId: "1:951177510571:web:8e5917a62e3443e1dbc1ee",
-  measurementId: "G-9DSK5WTW62"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-const modal = document.getElementById("comment-modal");
-const commentList = document.getElementById("comment-list");
-const closeBtn = document.getElementById("close-comments");
-const commentForm = document.getElementById("comment-form");
-let activePostId = null;
-
-document.body.addEventListener
-  </script>
-
-
-</body>
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: transparent;
+      color: #b8f1d9;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  </style>  <script type="module" src="script.js"></script></body>
 </html>
