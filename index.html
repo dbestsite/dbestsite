@@ -41,19 +41,7 @@
   </p>
 </footer>
 
-<div id="comment-popup" class="hidden">
-  <div class="popup-header">
-    <button id="go-back">Go Back</button>
-    <h2>Comments</h2>
-  </div>
-  <div id="comment-section" class="comment-scroll"></div>
-  <form id="comment-form">
-    <textarea id="comment-input" placeholder="Write a comment..." required></textarea>
-    <button type="submit">Post</button>
-  </form>
-</div>
 
-<script type="module" src="comment-system.js"></script>	
 
   	
 <script type="module">
@@ -171,12 +159,7 @@
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    // ✅ Add Comments Button
-    const commentBtn = document.createElement("button");
-    commentBtn.textContent = "Comments";
-    commentBtn.classList.add("open-comments-btn");
-    commentBtn.dataset.postId = video.postId;
-    card.appendChild(commentBtn);
+   
 
     videoContainer.appendChild(card);
 
