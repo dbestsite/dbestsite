@@ -1,7 +1,7 @@
 // script.js
 
 import { setupRatingSystem } from './rating.js';
-import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 
 // Firebase config
@@ -28,8 +28,6 @@ const modal = document.getElementById("comment-modal");
 const commentList = document.getElementById("comment-list");
 const closeBtn = document.getElementById("close-comments");
 const commentForm = document.getElementById("comment-form");
-const nameInput = document.getElementById("comment-name");
-const textInput = document.getElementById("comment-text");
 
 let videoData = [];
 let filteredData = [];
@@ -37,9 +35,6 @@ let selectedTags = new Set();
 let currentPage = 1;
 const videosPerPage = 5;
 let activePostId = null;
-
-let username = localStorage.getItem("dbest_username") || "";
-if (username) nameInput.value = username;
 
 fetch('videos.json')
   .then(res => res.json())
@@ -51,6 +46,7 @@ fetch('videos.json')
 
 function initFilters() {
   const allTags = [...new Set(videoData.flatMap(v => v.tags))];
+
   allTags.forEach(tag => {
     const btn = document.createElement("button");
     btn.textContent = tag;
@@ -66,6 +62,7 @@ function initFilters() {
     };
     tagFilter.appendChild(btn);
   });
+
   searchInput.addEventListener("input", applyFilters);
 }
 
@@ -119,6 +116,7 @@ function renderVideos() {
 }
 
 // Disable right-click
+document.addEventListener("contextmenu", e => e.preventDefault());
 
 // Auto pause videos out of view
 function checkVideoVisibility() {
@@ -126,91 +124,136 @@ function checkVideoVisibility() {
     const rect = video.getBoundingClientRect();
     const videoHeight = rect.height;
     const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2);
-    if (scrolledOut && !video.paused) video.pause();
+    if (scrolledOut && !video.paused) {
+      video.pause();
+    }
   });
 }
 window.addEventListener("scroll", checkVideoVisibility);
 
-// Comment Modal
+// --- COMMENT MODAL & COMMENTS HANDLING ---
 
-document.body.addEventListener("click", e => {
-  if (e.target.classList.contains("comment-btn")) {
-    activePostId = e.target.dataset.postid;
-    loadComments(activePostId);
-    loadSavedUserName();    // <-- call here
-    modal.classList.remove("hidden");
-  }
-});
-
-closeBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-  commentList.innerHTML = "";
-});
-
-commentForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const name = nameInput.value.trim();
-  const text = textInput.value.trim();
-  if (!name || !text) return;
-
-  // Save username to localStorage after first submission
-localStorage.setItem('commentUserName', name);
-  localStorage.setItem("dbest_username", name);
-  const commentRef = ref(db, `comments/${activePostId}`);
-  push(commentRef, {
-    name,
-    text,
-    timestamp: Date.now(),
-    likes: 0,
-    replies: []
-  });
-  commentForm.reset();
-});
-
+// Load saved username and lock input if saved
 function loadSavedUserName() {
   const savedName = localStorage.getItem('commentUserName');
   const nameInput = document.getElementById('comment-name');
   if (savedName) {
     nameInput.value = savedName;
-    nameInput.disabled = true; // lock the name input after first input
+    nameInput.disabled = true;  // lock input so user can't change
   } else {
     nameInput.value = '';
     nameInput.disabled = false;
   }
 }
 
+// Build nested comments tree and render recursively
+function renderCommentsTree(commentsObj) {
+  const commentsArray = Object.entries(commentsObj).map(([id, c]) => ({ id, ...c }));
+
+  // Map parentId to children comments
+  const map = {};
+  commentsArray.forEach(c => {
+    if (!map[c.parentId]) map[c.parentId] = [];
+    map[c.parentId].push(c);
+  });
+
+  function createCommentElement(comment) {
+    const div = document.createElement('div');
+    div.classList.add('comment');
+    div.style.marginLeft = comment.parentId ? "20px" : "0px"; // indent replies
+    div.innerHTML = `
+      <strong>${comment.name}</strong>
+      <p>${comment.text}</p>
+      <button class="reply-btn" data-commentid="${comment.id}" data-author="${comment.name}">Reply</button>
+      <div class="replies"></div>
+      <hr/>
+    `;
+
+    const repliesContainer = div.querySelector('.replies');
+    const replies = map[comment.id];
+    if (replies) {
+      replies.sort((a,b) => a.timestamp - b.timestamp).forEach(reply => {
+        repliesContainer.appendChild(createCommentElement(reply));
+      });
+    }
+    return div;
+  }
+
+  const fragment = document.createDocumentFragment();
+  (map[null] || []).forEach(comment => {
+    fragment.appendChild(createCommentElement(comment));
+  });
+  return fragment;
+}
+
+// Load comments from Firebase and render
 function loadComments(postId) {
   const commentRef = ref(db, `comments/${postId}`);
   onValue(commentRef, snapshot => {
     commentList.innerHTML = "";
     const comments = snapshot.val();
     if (comments) {
-      Object.entries(comments).sort((a, b) => b[1].timestamp - a[1].timestamp).forEach(([id, c]) => {
-        const div = document.createElement("div");
-        div.className = "comment";
-        const liked = localStorage.getItem(`liked_${id}`);
-        div.innerHTML = `
-          <p><strong>${c.name}</strong>: ${c.text}</p>
-          <button class="reply-btn" data-name="${c.name}">@Reply</button>
-          <button class="like-btn" data-id="${id}">${liked ? "Unlike" : "Like"} (${c.likes || 0})</button>
-          <hr/>
-        `;
-        div.querySelector(".reply-btn").onclick = () => {
-          textInput.value = `@${c.name} `;
-          textInput.focus();
-        };
-        div.querySelector(".like-btn").onclick = () => {
-          const liked = localStorage.getItem(`liked_${id}`);
-          const commentLikesRef = ref(db, `comments/${postId}/${id}`);
-          update(commentLikesRef, {
-            likes: (c.likes || 0) + (liked ? -1 : 1)
-          });
-          localStorage.setItem(`liked_${id}`, liked ? "" : "1");
-        };
-        commentList.appendChild(div);
-      });
+      commentList.appendChild(renderCommentsTree(comments));
     } else {
       commentList.innerHTML = "<p>No comments yet.</p>";
     }
   });
 }
+
+// Open modal and load comments + user name
+document.body.addEventListener("click", e => {
+  if (e.target.classList.contains("comment-btn")) {
+    activePostId = e.target.dataset.postid;
+    loadComments(activePostId);
+    loadSavedUserName();
+    modal.classList.remove("hidden");
+  }
+});
+
+// Close modal and reset comment list & form data-parentId
+closeBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  commentList.innerHTML = "";
+  commentForm.reset();
+  delete commentForm.dataset.parentId;
+});
+
+// Listen for reply button clicks inside commentList to prefill input
+commentList.addEventListener('click', e => {
+  if (e.target.classList.contains('reply-btn')) {
+    const author = e.target.dataset.author;
+    const commentId = e.target.dataset.commentid;
+    const textInput = document.getElementById('comment-text');
+
+    textInput.value = `@${author} `;
+    textInput.focus();
+
+    // Store the parent comment id to send with new comment
+    commentForm.dataset.parentId = commentId;
+  }
+});
+
+// Handle new comment submission
+commentForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const nameInput = document.getElementById("comment-name");
+  const name = nameInput.value.trim();
+  const text = document.getElementById("comment-text").value.trim();
+
+  if (!name || !text) return;
+
+  // Save username on first comment and lock input
+  if (!localStorage.getItem('commentUserName')) {
+    localStorage.setItem('commentUserName', name);
+    nameInput.disabled = true;
+  }
+
+  // Get parentId if replying to a comment
+  const parentId = commentForm.dataset.parentId || null;
+
+  const commentRef = ref(db, `comments/${activePostId}`);
+  push(commentRef, { name, text, timestamp: Date.now(), parentId });
+
+  commentForm.reset();
+  delete commentForm.dataset.parentId;
+});
