@@ -2,7 +2,8 @@
 
 import { setupRatingSystem } from './rating.js'; import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"; import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 
-// Firebase config const firebaseConfig = { apiKey: "AIzaSyDWqWfKWRY7nxZTIXxgV1j_baHY0m8F_Ng", authDomain: "dbest-rating.firebaseapp.com", databaseURL: "https://dbest-rating-default-rtdb.firebaseio.com", projectId: "dbest-rating", storageBucket: "dbest-rating.appspot.com", messagingSenderId: "951177510571", appId: "1:951177510571:web:8e5917a62e3443e1dbc1ee", measurementId: "G-9DSK5WTW62" };
+// Firebase config 
+const firebaseConfig = { apiKey: "AIzaSyDWqWfKWRY7nxZTIXxgV1j_baHY0m8F_Ng", authDomain: "dbest-rating.firebaseapp.com", databaseURL: "https://dbest-rating-default-rtdb.firebaseio.com", projectId: "dbest-rating", storageBucket: "dbest-rating.appspot.com", messagingSenderId: "951177510571", appId: "1:951177510571:web:8e5917a62e3443e1dbc1ee", measurementId: "G-9DSK5WTW62" };
 
 const app = initializeApp(firebaseConfig); const db = getDatabase(app);
 
@@ -12,7 +13,8 @@ const modal = document.getElementById("comment-modal"); const commentList = docu
 
 let videoData = []; let filteredData = []; let selectedTags = new Set(); let currentPage = 1; const videosPerPage = 5; let activePostId = null;
 
-// Remember name across session if (localStorage.getItem("commentName")) { nameInput.value = localStorage.getItem("commentName"); nameInput.disabled = true; }
+// Remember name across session 
+if (localStorage.getItem("commentName")) { nameInput.value = localStorage.getItem("commentName"); nameInput.disabled = true; }
 
 fetch('videos.json') .then(res => res.json()) .then(data => { videoData = data.reverse(); initFilters(); applyFilters(); });
 
@@ -30,9 +32,11 @@ function renderVideos() { videoContainer.innerHTML = ""; const start = (currentP
 
 pageVideos.forEach(video => { const card = document.createElement("div"); card.className = "video-card"; card.innerHTML = <h3>${video.title}</h3> <video src="${video.url}" controls playsinline controlsList="nodownload"></video> <div class="tags">${video.tags.map(t =><span>#${t}</span>).join(' ')}</div> <div class="rating-box" id="rating-${video.postId}">Loading rating...</div> <button class="comment-btn" data-postid="${video.postId}">Comments</button> ; videoContainer.appendChild(card); setupRatingSystem(video.postId, video.votes || 0, video.sum || 0); }); }
 
-// Disable right-click document.addEventListener("contextmenu", e => e.preventDefault());
+// Disable right-click 
+document.addEventListener("contextmenu", e => e.preventDefault());
 
-// Auto pause videos out of view function checkVideoVisibility() { document.querySelectorAll("video").forEach(video => { const rect = video.getBoundingClientRect(); const videoHeight = rect.height; const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2); if (scrolledOut && !video.paused) { video.pause(); } }); } window.addEventListener("scroll", checkVideoVisibility);
+// Auto pause videos out of view function 
+checkVideoVisibility() { document.querySelectorAll("video").forEach(video => { const rect = video.getBoundingClientRect(); const videoHeight = rect.height; const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2); if (scrolledOut && !video.paused) { video.pause(); } }); } window.addEventListener("scroll", checkVideoVisibility);
 
 // Comment Modal Handling
 
