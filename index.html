@@ -29,18 +29,6 @@
 		  <div id="ad3"></div><div id="ad4"></div><div id="pcad3"></div><div id="pcad4"></div>
 	  </div>
 
-   <div id="comment-popup">
-  <div class="popup-header">
-    <button id="go-back">Go Back</button>
-    <h2>Comments</h2>
-  </div>
-  <div id="comment-section" class="comment-scroll"></div>
-  <form id="comment-form">
-    <textarea id="comment-input" placeholder="Write a comment..." required></textarea>
-    <button type="submit">Post</button>
-  </form>
-</div>
-
     <div id="pagination" class="pagination-controls"></div>
 	  
   </main>
@@ -62,8 +50,7 @@
   setupFooterPopup();
 </script>
 
-	<script type="module" src="comment-system.js"></script>
-
+	
 <script type="module">
   import { insertBannerAd } from './adBanner.js';
 
@@ -174,13 +161,7 @@
       
     `;
 
-   // ➕ Add comment button
-      const btn = document.createElement('button');
-      btn.textContent = "Comments";
-      btn.className = "open-comments-btn";
-      btn.dataset.postId = video.postId;
-      setupCommentButton(btn);
-      card.appendChild(btn);
+  
 
     videoContainer.appendChild(card);
 
