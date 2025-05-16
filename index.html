@@ -125,17 +125,20 @@
 }
 
 
-    function applyFilters() {
-      const term = searchInput.value.toLowerCase();
-      filteredData = videoData.filter(v =>
-        v.title.toLowerCase().includes(term) &&
-        (!activeTag || v.tags.includes(activeTag))
-      );
+   function applyFilters() {
+  const term = searchInput.value.toLowerCase();
+  const selected = [...(window.selectedTags || [])];
 
-      currentPage = 1;
-      renderPagination();
-      renderVideos();
-    }
+  filteredData = videoData.filter(v =>
+    v.title.toLowerCase().includes(term) &&
+    (selected.length === 0 || selected.every(tag => v.tags.includes(tag)))
+  );
+
+  currentPage = 1;
+  renderPagination();
+  renderVideos();
+}
+
 
     function renderPagination() {
       pagination.innerHTML = "";
