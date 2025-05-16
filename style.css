@@ -147,5 +147,25 @@ video {
   line-height: 1.5;
 }
 
+.comment-item {
+  background: #25332f;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 5px 0;
+  color: #b8f1d9;
+  font-family: Arial, sans-serif;
+}
+.comment-item button {
+  margin-right: 10px;
+  background: #1c2926;
+  color: #b8f1d9;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.comment-item button:hover {
+  background: #305b52;
+}
 
 
