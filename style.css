@@ -144,7 +144,6 @@ video {
 
 
 
-
   #comment-popup {
     position: fixed;
     inset: 0;
@@ -166,22 +165,5 @@ video {
     overflow-y: auto;
     margin: 1rem 0;
   }
-  .comment {
-    margin-left: 1rem;
-    border-left: 2px solid #444;
-    padding-left: 0.5rem;
-  }
-  .reply-btn, .like-btn {
-    margin-right: 0.5rem;
-    cursor: pointer;
-  }
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  textarea {
-    resize: none;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
+
 
