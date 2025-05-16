@@ -26,17 +26,7 @@
 		  <div id="ad3"></div><div id="ad4"></div><div id="pcad3"></div><div id="pcad4"></div>
 	  </div>
 
-    <div id="comment-popup" class="popup hidden">
-  <div class="popup-header">
-    <button id="go-back">Go Back</button>
-    <h2>Comments</h2>
-  </div>
-  <div id="comment-section" class="comment-scroll"></div>
-  <form id="comment-form">
-    <textarea id="comment-input" placeholder="Write a comment..." required></textarea>
-    <button type="submit">Post</button>
-  </form>
-</div>
+   
 
     <div id="pagination" class="pagination-controls"></div>
 	  
@@ -51,6 +41,18 @@
   </p>
 </footer>
 
+<!-- Comment Popup (added once only) -->
+<div id="comment-popup" class="hidden">
+  <div class="popup-header">
+    <button id="go-back">Go Back</button>
+    <h2>Comments</h2>
+  </div>
+  <div id="comment-section" class="comment-scroll"></div>
+  <form id="comment-form">
+    <textarea id="comment-input" placeholder="Write a comment..." required></textarea>
+    <button type="submit">Post</button>
+  </form>
+</div>
 
   	
 <script type="module">
@@ -78,19 +80,7 @@
   });
 </script>
 
-	<script type="module" src="script.js"></script>
-
-	<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
-<script>
-  const firebaseConfig = {
-    // your config here
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const auth = firebase.auth();
-</script>
+	
 
 	
   <script type="module">
@@ -178,7 +168,7 @@
           <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
           <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
           <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-	  <button class="open-comments-btn" data-post-id="${video.postId}">Comments</button>
+	  
         `;
 
         videoContainer.appendChild(card);
