@@ -97,7 +97,7 @@ video {
   padding: 0.5rem 1rem;
   background: #00ff99;
   color: #121212;
-  border: none;
+  border-color: #00ff99;
   border-radius: 5px;
   cursor: pointer;
 }
