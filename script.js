@@ -29,7 +29,10 @@ const searchInput = document.getElementById("search");
 const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
-
+const modal = document.getElementById("comment-modal");
+const commentList = document.getElementById("comment-list");
+const closeBtn = document.getElementById("close-comments");
+const commentForm = document.getElementById("comment-form");
 
 let videoData = [];
 let filteredData = [];
