@@ -48,6 +48,7 @@ fetch('videos.json')
     });
     initFilters();
     applyFilters();
+    renderVideos(data);
   });
 
 function initFilters() {
