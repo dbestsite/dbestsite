@@ -140,7 +140,7 @@ function renderVideos() {
     // Set start time to 2 seconds after metadata is loaded
     const videoElement = card.querySelector('video');
 videoElement.addEventListener('loadedmetadata', () => {
-  videoElement.currentTime = 2;
+  videoElement.currentTime = 1;
 });
   });
 }
