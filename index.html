@@ -38,11 +38,11 @@
     </p>
   </footer>  
 
-  <script>
-    insertBannerAd('ad1');
-    insertBannerAd('ad2');
-    insertBannerAd('ad3');
-    insertBannerAd('ad4');  
+  <script type="module">
+   document.addEventListener("DOMContentLoaded", () => {
+    const adIds = ['ad1', 'ad2', 'ad3', 'ad4'];
+    adIds.forEach(id => insertBannerAd(id));
+   });
   </script>
   
 <script type="module" src="adBanner.js"></script>
