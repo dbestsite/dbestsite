@@ -113,6 +113,35 @@ function renderVideos() {
     videoContainer.appendChild(card);
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
   });
+
+setupVideoControls();  // Add this line
+}
+
+function setupVideoControls() {
+  const videos = document.querySelectorAll("video");
+
+  // Pause all other videos when one is played
+  videos.forEach(video => {
+    video.addEventListener("play", () => {
+      videos.forEach(v => {
+        if (v !== video) v.pause();
+      });
+    });
+  });
+
+  // Autoplay when scrolling into view
+  window.addEventListener("scroll", () => {
+    videos.forEach(video => {
+      const rect = video.getBoundingClientRect();
+      const visible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+      if (visible && video.paused) {
+        video.play().catch(() => {}); // some browsers block autoplay unless muted
+      } else if (!visible && !video.paused) {
+        video.pause();
+      }
+    });
+  });
 }
 
 // Disable right-click
@@ -120,16 +149,42 @@ document.addEventListener("contextmenu", e => e.preventDefault());
 
 // Auto pause videos out of view
 function checkVideoVisibility() {
-  document.querySelectorAll("video").forEach(video => {
+function setupVideoControls() {
+  const videos = document.querySelectorAll("video");
+
+  videos.forEach(video => {
+    // Pause other videos when one plays
+    video.addEventListener("play", () => {
+      videos.forEach(v => {
+        if (v !== video && !v.paused) v.pause();
+      });
+    });
+  });
+
+  // Initial visibility check and on scroll/resize
+  checkVideoVisibility();
+  window.addEventListener("scroll", checkVideoVisibility);
+  window.addEventListener("resize", checkVideoVisibility);
+}
+
+function checkVideoVisibility() {
+  const videos = document.querySelectorAll("video");
+
+  videos.forEach(video => {
     const rect = video.getBoundingClientRect();
-    const videoHeight = rect.height;
-    const scrolledOut = rect.bottom < window.innerHeight - (videoHeight * 0.2);
-    if (scrolledOut && !video.paused) {
+    const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+    const visibilityRatio = visibleHeight / rect.height;
+
+    // Auto-play if 60% visible and paused
+    if (visibilityRatio > 0.6 && video.paused) {
+      video.play().catch(() => {});
+    }
+    // Auto-pause if less than 60% visible and playing
+    else if (visibilityRatio <= 0.6 && !video.paused) {
       video.pause();
     }
   });
 }
-window.addEventListener("scroll", checkVideoVisibility);
 
 // --- COMMENT MODAL & COMMENTS HANDLING ---
 
