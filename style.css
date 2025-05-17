@@ -106,6 +106,7 @@ video {
   font-weight: bold;
   background: #ffffff;
   color: #00ff99;
+  border-color: #00ff99;
 }
 
 .footer-popup-overlay {
