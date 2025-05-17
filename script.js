@@ -72,25 +72,20 @@ function applyTagFilter(tag) {
   if (selectedTags.has(tag)) {
     selectedTags.delete(tag);
   } else {
-    selectedTags.clear(); // optional: only one tag filter active at a time
+    selectedTags.clear(); // optional: for single-select behavior
     selectedTags.add(tag);
   }
   applyFilters();
-  highlightCustomTagButtons(); // update button styles
+  highlightCustomTagButtons();
 }
-
-// Make function globally accessible
 window.applyTagFilter = applyTagFilter;
-
 function highlightCustomTagButtons() {
-  const wrappers = document.querySelectorAll('.custom-tag');
-  wrappers.forEach(wrapper => {
-    const btn = wrapper.querySelector('button');
-    const tag = btn.textContent.trim();
+  document.querySelectorAll('#custom-tag button').forEach(btn => {
+    const tag = btn.textContent.toLowerCase().includes("short") ? "shortvids" : "fullvids";
     if (selectedTags.has(tag)) {
-      wrapper.classList.add('active');
+      btn.classList.add("active");
     } else {
-      wrapper.classList.remove('active');
+      btn.classList.remove("active");
     }
   });
 }
