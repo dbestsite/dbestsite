@@ -140,7 +140,7 @@ pageVideos.forEach(video => {
   // Set video start time
   const videoEl = card.querySelector("video");
   videoEl.addEventListener("loadedmetadata", () => {
-    videoEl.currentTime = 2;
+    videoEl.currentTime = 1;
   });
 
   // >>> THIS is what you're missing:
@@ -167,32 +167,4 @@ window.addEventListener("scroll", checkVideoVisibility);
 
 // Comment Modal Handling
 
-document.body.addEventListener("click", e => {
-  if (e.target.classList.contains("comment-btn")) {
-    activePostId = e.target.dataset.postid;
-    loadComments(activePostId);
-    modal.classList.remove("hidden");
-  }
-});
 
-closeBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-  commentList.innerHTML = "";
-});
-
-commentForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const name = document.getElementById("comment-name").value.trim();
-  const text = document.getElementById("comment-text").value.trim();
-
-  if (!name || !text) return;
-
-  const commentRef = ref(db, `comments/${activePostId}`);
-  push(commentRef, { name, text, timestamp: Date.now() });
-
-  commentForm.reset();
-});
-
-function loadComments(postId) {
-  
-}
