@@ -30,18 +30,23 @@
       <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">About Us</a> |
       <a href="#" style="color:#b8f1d9; text-decoration:none; margin: 0 10px;">Contact</a>
     </p>
-  </footer>  <div id="comment-modal" class="comment-modal hidden">
-    <div class="comment-content">
-      <button id="close-comments" class="comment-close-btn">×</button>
-      <h2>Comments</h2>
-      <div id="comment-list"></div>
-      <form id="comment-form">
-        <input type="text" id="comment-name" placeholder="Your name" required />
-        <textarea id="comment-text" placeholder="Your comment" required></textarea>
-        <button type="submit">Post</button>
-      </form>
-    </div>
-  </div>  <style>
+  </footer>  
+
+  <!-- Comment Modal -->
+<div id="comment-modal" class="modal hidden">
+  <div class="modal-content">
+    <button id="close-comments">Go Back</button>
+    <h3>Comments</h3>
+    <div id="comment-list" class="comment-list"></div>
+    <form id="comment-form">
+      <input type="text" id="comment-name" placeholder="Your name" required>
+      <textarea id="comment-text" placeholder="Write a comment..." required></textarea>
+      <button type="submit">Post Comment</button>
+    </form>
+  </div>
+</div>
+  
+  <style>
     .comment-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
