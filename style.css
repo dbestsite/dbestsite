@@ -164,7 +164,7 @@ video {
   font-size: 0.5rem;
 }
 
-.custom-tag button.active {
+#custom-tag button.active {
   font-weight: bold;
   background: #00ff99;
   color: #121212;
