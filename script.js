@@ -145,23 +145,6 @@ videoElement.addEventListener('loadedmetadata', () => {
   });
 }
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.intersectionRatio >= 0.8) {
-      video.play();
-    } else {
-      video.pause();
-    }
-  });
-}, {
-  threshold: [0, 0.8]
-});
-
-// Observe all video elements
-document.querySelectorAll('video').forEach(video => {
-  observer.observe(video);
-});
 
 // Disable right-click
 document.addEventListener("contextmenu", e => e.preventDefault());
