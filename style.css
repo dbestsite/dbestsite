@@ -147,3 +147,24 @@ video {
   margin-top: 40px;
   line-height: 1.5;
 }
+
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.custom-tag-buttons button {
+  margin: 0 0.3rem;
+  padding: 0.5rem 1rem;
+  background: #00ff99;
+  color: #121212;
+  border-color: #00ff99;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-tag-buttons button.active {
+  font-weight: bold;
+  background: #ffffff;
+  color: #00ff99;
+  border-color: #00ff99;
+}
