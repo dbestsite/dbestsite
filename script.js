@@ -129,21 +129,39 @@ function renderVideos() {
     const card = document.createElement("div");
     card.className = "video-card";
     card.innerHTML = `
-      <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload" muted autoplay></video>
-      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-    `;
+  <h3>${video.title}</h3>
+  <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+  <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+  <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+`;
 
     videoContainer.appendChild(card);
 
     // Set start time to 2 seconds after metadata is loaded
     const videoElement = card.querySelector('video');
-    videoElement.addEventListener('loadedmetadata', () => {
-      videoElement.currentTime = 2;
-    });
+videoElement.addEventListener('loadedmetadata', () => {
+  videoElement.currentTime = 2;
+});
   });
 }
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.intersectionRatio >= 0.8) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+}, {
+  threshold: [0, 0.8]
+});
+
+// Observe all video elements
+document.querySelectorAll('video').forEach(video => {
+  observer.observe(video);
+});
 
 // Disable right-click
 document.addEventListener("contextmenu", e => e.preventDefault());
