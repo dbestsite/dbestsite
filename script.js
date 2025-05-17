@@ -125,25 +125,27 @@ function renderVideos() {
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
-  pageVideos.forEach(video => {
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.innerHTML = `
-  <h3>${video.title}</h3>
-  <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-  <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-  <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-`;
+  
+pageVideos.forEach(video => {
+  const card = document.createElement("div");
+  card.className = "video-card";
+  card.innerHTML = `
+    <h3>${video.title}</h3>
+    <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+    <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+    <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+  `;
+  videoContainer.appendChild(card);
 
-    videoContainer.appendChild(card);
-    loadRatingForVideo(video.postId);
-
-    // Set start time to 2 seconds after metadata is loaded
-    const videoElement = card.querySelector('video');
-videoElement.addEventListener('loadedmetadata', () => {
-  videoElement.currentTime = 1;
-});
+  // Set video start time
+  const videoEl = card.querySelector("video");
+  videoEl.addEventListener("loadedmetadata", () => {
+    videoEl.currentTime = 2;
   });
+
+  // >>> THIS is what you're missing:
+  setupRatingSystem(video.postId);
+});
 }
 
 
