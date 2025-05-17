@@ -83,13 +83,14 @@ function applyTagFilter(tag) {
 window.applyTagFilter = applyTagFilter;
 
 function highlightCustomTagButtons() {
-  const buttons = document.querySelectorAll('#custom-tag button');
-  buttons.forEach(btn => {
+  const wrappers = document.querySelectorAll('.custom-tag');
+  wrappers.forEach(wrapper => {
+    const btn = wrapper.querySelector('button');
     const tag = btn.textContent.trim();
     if (selectedTags.has(tag)) {
-      btn.classList.add('active');
+      wrapper.classList.add('active');
     } else {
-      btn.classList.remove('active');
+      wrapper.classList.remove('active');
     }
   });
 }
