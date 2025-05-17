@@ -114,35 +114,10 @@ function renderVideos() {
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
   });
 
-  setupVideoControls(); // Ensure only one video plays at a time
+  // Ensure only one video plays at a time
 }
 
-function setupVideoControls() {
-  const videos = document.querySelectorAll("video");
 
-  // Pause all other videos when one is played
-  videos.forEach(video => {
-    video.addEventListener("play", () => {
-      videos.forEach(v => {
-        if (v !== video) v.pause();
-      });
-    });
-  });
-
-  // Autoplay when scrolling into view
-  window.addEventListener("scroll", () => {
-    videos.forEach(video => {
-      const rect = video.getBoundingClientRect();
-      const visible = rect.top >= 0 && rect.bottom <= window.innerHeight;
-
-      if (visible && video.paused) {
-        video.play().catch(() => {}); // some browsers block autoplay unless muted
-      } else if (!visible && !video.paused) {
-        video.pause();
-      }
-    });
-  });
-}
 
 // Disable right-click
 document.addEventListener("contextmenu", e => e.preventDefault());
