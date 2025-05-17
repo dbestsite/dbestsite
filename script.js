@@ -113,7 +113,7 @@ function renderVideos() {
       <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-      <button class="comment-btn" data-postid="${video.postId}">Comments</button>
+      
     `;
     videoContainer.appendChild(card);
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
@@ -137,46 +137,5 @@ function checkVideoVisibility() {
 window.addEventListener("scroll", checkVideoVisibility);
 
 // Comment Modal Handling
-document.body.addEventListener("click", e => {
-  if (e.target.classList.contains("comment-btn")) {
-    activePostId = e.target.dataset.postid;
-    loadComments(activePostId);
-    modal.classList.remove("hidden");
-  }
-});
 
-closeBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-  commentList.innerHTML = "";
-});
-
-commentForm.addEventListener("submit", e => {
-  e.preventDefault();
-  const name = document.getElementById("comment-name").value.trim();
-  const text = document.getElementById("comment-text").value.trim();
-
-  if (!name || !text) return;
-
-  const commentRef = ref(db, `comments/${activePostId}`);
-  push(commentRef, { name, text, timestamp: Date.now() });
-
-  commentForm.reset();
-});
-
-function loadComments(postId) {
-  const commentRef = ref(db, `comments/${postId}`);
-  onValue(commentRef, snapshot => {
-    commentList.innerHTML = "";
-    const comments = snapshot.val();
-    if (comments) {
-      const sorted = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
-      sorted.forEach(c => {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${c.name}</strong><p>${c.text}</p><hr/>`;
-        commentList.appendChild(div);
-      });
-    } else {
-      commentList.innerHTML = "<p>No comments yet.</p>";
-    }
-  });
 }
