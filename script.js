@@ -68,6 +68,14 @@ function initFilters() {
   searchInput.addEventListener("input", applyFilters);
 }
 
+function applyTagFilter(tag) {
+  selectedTags.clear();
+  selectedTags.add(tag);
+  applyFilters();
+}
+
+window.applyTagFilter = applyTagFilter;
+
 function applyFilters() {
   const term = searchInput.value.toLowerCase();
   const selected = [...selectedTags];
