@@ -1,4 +1,9 @@
 // script.js
+import { setupFooterPopup } from './footer.js';
+document.addEventListener("DOMContentLoaded", () => {
+  setupFooterPopup();
+});
+
 
 import { setupRatingSystem } from './rating.js';
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
