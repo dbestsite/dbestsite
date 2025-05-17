@@ -39,6 +39,7 @@
   </footer>  
 
   <script type="module">
+  import { insertBannerAd } from './adBanner.js';
    document.addEventListener("DOMContentLoaded", () => {
     const adIds = ['ad1', 'ad2', 'ad3', 'ad4'];
     adIds.forEach(id => insertBannerAd(id));
