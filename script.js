@@ -69,12 +69,31 @@ function initFilters() {
 }
 
 function applyTagFilter(tag) {
-  selectedTags.clear();
-  selectedTags.add(tag);
+  if (selectedTags.has(tag)) {
+    selectedTags.delete(tag);
+  } else {
+    selectedTags.clear(); // optional: only one tag filter active at a time
+    selectedTags.add(tag);
+  }
   applyFilters();
+  highlightCustomTagButtons(); // update button styles
 }
 
+// Make function globally accessible
 window.applyTagFilter = applyTagFilter;
+
+function highlightCustomTagButtons() {
+  const buttons = document.querySelectorAll('.custom-tag button');
+  buttons.forEach(btn => {
+    const tag = btn.textContent.trim();
+    if (selectedTags.has(tag)) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
 
 function applyFilters() {
   const term = searchInput.value.toLowerCase();
