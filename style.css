@@ -148,11 +148,12 @@ video {
   line-height: 1.5;
 }
 
+.custom-tag {
   text-align: center;
   margin: 2rem 0;
 }
 
-.custom-tag-buttons {
+.custom-tag button {
   margin: 0 0.3rem;
   padding: 0.5rem 1rem;
   background: #00ff99;
@@ -162,7 +163,7 @@ video {
   cursor: pointer;
 }
 
-.custom-tag-buttons.active {
+.custom-tag button.active {
   font-weight: bold;
   background: #ffffff;
   color: #00ff99;
