@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterPopup();
 });
 
+import { insertBannerAd } from './adBanner.js';
+document.addEventListener("DOMContentLoaded", () => {
+  insertBannerAd();
+});
 
 import { setupRatingSystem } from './rating.js';
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
