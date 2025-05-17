@@ -105,7 +105,7 @@ function renderVideos() {
     card.className = "video-card";
     card.innerHTML = `
       <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
+      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
       <button class="comment-btn" data-postid="${video.postId}">Comments</button>
@@ -114,7 +114,7 @@ function renderVideos() {
     setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
   });
 
-setupVideoControls();  // Add this line
+  setupVideoControls(); // Ensure only one video plays at a time
 }
 
 function setupVideoControls() {
