@@ -41,14 +41,14 @@ let activePostId = null;
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    data.sort((a, b) => {
-      const idA = parseInt(a.id.replace('video', ''));
-      const idB = parseInt(b.id.replace('video', ''));
-      return idB - idA;
+    videoData = data.sort((a, b) => {
+      const idA = parseInt(a.postId.replace('video', ''));
+      const idB = parseInt(b.postId.replace('video', ''));
+      return idB - idA; // Newest first
     });
+
     initFilters();
     applyFilters();
-    renderVideos(data);
   });
 
 function initFilters() {
