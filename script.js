@@ -162,19 +162,5 @@ commentForm.addEventListener("submit", e => {
 });
 
 function loadComments(postId) {
-  const commentRef = ref(db, `comments/${postId}`);
-  onValue(commentRef, snapshot => {
-    commentList.innerHTML = "";
-    const comments = snapshot.val();
-    if (comments) {
-      const sorted = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
-      sorted.forEach(c => {
-        const div = document.createElement("div");
-        div.innerHTML = `<strong>${c.name}</strong><p>${c.text}</p><hr/>`;
-        commentList.appendChild(div);
-      });
-    } else {
-      commentList.innerHTML = "<p>No comments yet.</p>";
-    }
-  });
+  
 }
