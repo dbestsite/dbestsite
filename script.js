@@ -41,7 +41,11 @@ let activePostId = null;
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    videoData = data.reverse();
+    data.sort((a, b) => {
+      const idA = parseInt(a.id.replace('video', ''));
+      const idB = parseInt(b.id.replace('video', ''));
+      return idB - idA;
+    });
     initFilters();
     applyFilters();
   });
