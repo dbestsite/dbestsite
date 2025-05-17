@@ -120,6 +120,7 @@ function renderPagination() {
 }
 
 function renderVideos() {
+function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
@@ -130,13 +131,18 @@ function renderVideos() {
     card.className = "video-card";
     card.innerHTML = `
       <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload"></video>
+      <video src="${video.url}" controls playsinline controlsList="nodownload" muted autoplay></video>
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-      
     `;
+
     videoContainer.appendChild(card);
-    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
+
+    // Set start time to 2 seconds after metadata is loaded
+    const videoElement = card.querySelector('video');
+    videoElement.addEventListener('loadedmetadata', () => {
+      videoElement.currentTime = 2;
+    });
   });
 }
 
