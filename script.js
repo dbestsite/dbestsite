@@ -83,7 +83,7 @@ function applyTagFilter(tag) {
 window.applyTagFilter = applyTagFilter;
 
 function highlightCustomTagButtons() {
-  const buttons = document.querySelectorAll('.custom-tag button');
+  const buttons = document.querySelectorAll('#custom-tag button');
   buttons.forEach(btn => {
     const tag = btn.textContent.trim();
     if (selectedTags.has(tag)) {
