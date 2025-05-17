@@ -29,10 +29,7 @@ const searchInput = document.getElementById("search");
 const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
-const modal = document.getElementById("comment-modal");
-const commentList = document.getElementById("comment-list");
-const closeBtn = document.getElementById("close-comments");
-const commentForm = document.getElementById("comment-form");
+
 
 let videoData = [];
 let filteredData = [];
@@ -138,4 +135,46 @@ window.addEventListener("scroll", checkVideoVisibility);
 
 // Comment Modal Handling
 
+document.body.addEventListener("click", e => {
+  if (e.target.classList.contains("comment-btn")) {
+    activePostId = e.target.dataset.postid;
+    loadComments(activePostId);
+    modal.classList.remove("hidden");
+  }
+});
+
+closeBtn.addEventListener("click", () => {
+  modal.classList.add("hidden");
+  commentList.innerHTML = "";
+});
+
+commentForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("comment-name").value.trim();
+  const text = document.getElementById("comment-text").value.trim();
+
+  if (!name || !text) return;
+
+  const commentRef = ref(db, `comments/${activePostId}`);
+  push(commentRef, { name, text, timestamp: Date.now() });
+
+  commentForm.reset();
+});
+
+function loadComments(postId) {
+  const commentRef = ref(db, `comments/${postId}`);
+  onValue(commentRef, snapshot => {
+    commentList.innerHTML = "";
+    const comments = snapshot.val();
+    if (comments) {
+      const sorted = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
+      sorted.forEach(c => {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${c.name}</strong><p>${c.text}</p><hr/>`;
+        commentList.appendChild(div);
+      });
+    } else {
+      commentList.innerHTML = "<p>No comments yet.</p>";
+    }
+  });
 }
