@@ -120,7 +120,6 @@ function renderPagination() {
 }
 
 function renderVideos() {
-function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
