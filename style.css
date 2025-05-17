@@ -148,12 +148,12 @@ video {
   line-height: 1.5;
 }
 
-.custom-tag {
+#custom-tag {
   text-align: center;
   margin: 0.5rem 0;
 }
 
-.custom-tag button {
+#custom-tag button {
   margin: 0 0.3rem;
   padding: 0.2rem;
   background: #ffffff;
