@@ -155,17 +155,18 @@ video {
 
 .custom-tag button {
   margin: 0 0.3rem;
-  padding: 0.5rem 1rem;
-  background: #00ff99;
-  color: #121212;
+  padding: 0.2rem;
+  background: #ffffff;
+  color: #00ff99;
   border-color: #00ff99;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 0.5rem;
 }
 
 .custom-tag button.active {
   font-weight: bold;
-  background: #ffffff;
-  color: #00ff99;
+  background: #00ff99;
+  color: #121212;
   border-color: #00ff99;
 }
