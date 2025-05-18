@@ -41,19 +41,16 @@ const isSinglePost = path && path !== "index.html";
 
 // After loading videos.json
 fetch('videos.json')
+fetch('videos.json')
   .then(res => res.json())
   .then(data => {
     videoData = data;
-    filteredData = [...videoData];
 
     if (isSinglePost) {
-      // Show just one video
-      const video = filteredData.find(v => v.postId === path);
-      if (video) {
-        filteredData = [video]; // override to just this one
-      } else {
-        filteredData = []; // no match
-      }
+      const match = videoData.find(v => v.postId === path);
+      filteredData = match ? [match] : [];
+    } else {
+      filteredData = [...videoData];
     }
 
     renderVideos();
@@ -141,14 +138,12 @@ function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
-  const pageVideos = filteredData.slice(start, end);
+  const pageVideos = isSinglePost ? filteredData : filteredData.slice(start, end);
 
-  if (filteredData.length === 1) {
+  if (isSinglePost && filteredData.length === 1) {
     const backButton = document.createElement("button");
     backButton.textContent = "Back to All Videos";
-    backButton.onclick = () => {
-      window.location.href = "/";
-    };
+    backButton.onclick = () => window.location.href = "/";
     videoContainer.appendChild(backButton);
   }
 
@@ -156,17 +151,15 @@ function renderVideos() {
     const card = document.createElement("div");
     card.className = "video-card";
     card.innerHTML = `
-      <h3><a href="/${video.postId}" class="video-link">${video.title}</a></h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <h3><a href="/${video.postId}">${video.title}</a></h3>
+      <video src="${video.url}" controls playsinline muted controlsList="nodownload"></video>
+      <div class="tags">${video.tags.map(tag => `<span>#${tag}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
-    videoContainer.appendChild(card);
-
     const videoEl = card.querySelector("video");
-    videoEl.addEventListener("loadedmetadata", () => {
-      videoEl.currentTime = 1;
-    });
+    videoEl.addEventListener("loadedmetadata", () => videoEl.currentTime = 1);
+    videoContainer.appendChild(card);
+  });
 
     // Handle title click for ad redirection
     const link = card.querySelector(".video-link");
