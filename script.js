@@ -44,19 +44,19 @@ const isSinglePost = path && path !== "index.html";
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
+    videoData = data;
+
+    const path = window.location.pathname.replace('/', '').split('?')[0];
+    const isSinglePost = path && path !== "index.html";
 
     if (isSinglePost) {
-      const video = data.find(v => v.postId === path);
-      filteredData = video ? [video] : [];
+      filterByPostId(path);
     } else {
       filteredData = data;
+      renderVideos();
+      renderPagination();
+      initFilters();
     }
-
-    videoData = data;
-    
-    renderVideos();
-    if (!isSinglePost) renderPagination();
-    initFilters();
   });
 
 function initFilters() {
@@ -187,4 +187,9 @@ function checkVideoVisibility() {
 window.addEventListener("scroll", checkVideoVisibility);
 
 // Comment Modal Handling
-
+function filterByPostId(postId) {
+  const match = videoData.find(v => v.postId === postId);
+  filteredData = match ? [match] : [];
+  currentPage = 1;
+  renderVideos();
+}
