@@ -135,6 +135,7 @@ function renderPagination() {
 }
 
 let adShown = sessionStorage.getItem("adShown") === "true";
+
 function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
@@ -166,11 +167,13 @@ function renderVideos() {
       videoEl.currentTime = 1;
     });
 
+    // Handle title click for ad redirection
     const link = card.querySelector(".video-link");
-    link.addEventListener("click", (e) => {
+    link.addEventListener("click", function (e) {
       if (!adShown) {
-        e.preventDefault();
+        e.preventDefault(); // stop normal link behavior
         sessionStorage.setItem("adShown", "true");
+        // Redirect to ad page with the post URL as a query
         window.location.href = `/ad.html?to=/${video.postId}`;
       }
     });
