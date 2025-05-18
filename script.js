@@ -179,8 +179,7 @@ function renderVideos() {
         });
       }
     });
-  });
-}
+  
   // >>> THIS is what you're missing:
   setupRatingSystem(video.postId);
 });
