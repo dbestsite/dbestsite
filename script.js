@@ -134,7 +134,7 @@ function renderPagination() {
   }
 }
 
-
+let adShown = sessionStorage.getItem("adShown") === "true";
 function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
