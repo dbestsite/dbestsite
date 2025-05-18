@@ -60,7 +60,11 @@ fetch('videos.json')
     } else {
       filteredData = videoData;
     }
-
+    
+if (!singleVideo) {
+  videoContainer.innerHTML = "<p>Video not found.</p>";
+  return;
+}
     initFilters(); // you can optionally skip this for single video view
     applyFilters();
   });
@@ -157,7 +161,7 @@ pageVideos.forEach(video => {
   const card = document.createElement("div");
   card.className = "video-card";
   card.innerHTML = `
-    <h3>${video.title}</h3>
+    <h3><a href="/${video.postId}">${video.title}</a></h3>
     <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
     <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
     <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
