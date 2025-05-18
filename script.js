@@ -47,7 +47,21 @@ fetch('videos.json')
       return idB - idA; // Newest first
     });
 
-    initFilters();
+    const path = window.location.pathname.slice(1); // e.g., "video123"
+    if (path) {
+      const singleVideo = videoData.find(v => v.postId === path);
+      if (singleVideo) {
+        filteredData = [singleVideo];
+      } else {
+        filteredData = [];
+        document.getElementById("video-container").innerHTML = "<p>Video not found.</p>";
+        return;
+      }
+    } else {
+      filteredData = videoData;
+    }
+
+    initFilters(); // you can optionally skip this for single video view
     applyFilters();
   });
 
@@ -130,6 +144,14 @@ function renderVideos() {
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
+  if (filteredData.length === 1) {
+  const backButton = document.createElement("button");
+  backButton.textContent = "Back to All Videos";
+  backButton.onclick = () => {
+    window.location.href = "/";
+  };
+  videoContainer.appendChild(backButton);
+}
   
 pageVideos.forEach(video => {
   const card = document.createElement("div");
