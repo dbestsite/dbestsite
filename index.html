@@ -8,6 +8,8 @@
     if (redirected) {
       history.replaceState(null, '', redirected);
       sessionStorage.removeItem('redirect');
+
+    let adShown = sessionStorage.getItem("adShown") === "true";
     }
   </script>
   <link rel="stylesheet" href="style.css" />
