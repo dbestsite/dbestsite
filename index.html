@@ -44,6 +44,12 @@
     const adIds = ['ad1', 'ad2', 'ad3', 'ad4'];
     adIds.forEach(id => insertBannerAd(id));
    });
+
+  const redirected = sessionStorage.redirect;
+if (redirected) {
+  history.replaceState(null, '', redirected);
+  sessionStorage.removeItem('redirect');
+}
   </script>
   
 <script type="module" src="adBanner.js"></script>
