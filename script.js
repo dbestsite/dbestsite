@@ -24,19 +24,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const videoContainer = document.getElementById("video-container");
-const searchInput = document.getElementById("search");
-const tagFilter = document.getElementById("tag-filter");
-const pagination = document.getElementById("pagination");
-
-
-
 let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
 let currentPage = 1;
-const videosPerPage = 5;
+const videosPerPage = 12;
 let activePostId = null;
+
+const videoContainer = document.getElementById("video-container");
+const searchInput = document.getElementById("search");
+const tagFilter = document.getElementById("tag-filter");
+const pagination = document.getElementById("pagination");
 
 const path = window.location.pathname.replace('/', '').split('?')[0]; // handle trailing slashes/queries
 const isSinglePost = path && path !== "index.html";
@@ -45,7 +43,8 @@ const isSinglePost = path && path !== "index.html";
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    filteredData = data;
+    videoData = data;
+    filteredData = [...videoData];
 
     if (isSinglePost) {
       // Show just one video
