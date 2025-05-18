@@ -44,26 +44,30 @@ fetch('videos.json')
     videoData = data.sort((a, b) => {
       const idA = parseInt(a.postId.replace('video', ''));
       const idB = parseInt(b.postId.replace('video', ''));
-      return idB - idA; // Newest first
+      return idB - idA;
     });
 
     const path = window.location.pathname.slice(1); // e.g., "video123"
+    let singleVideo = null;
 
-    if (path) {
-      const singleVideo = videoData.find(v => v.postId === path);
+    if (path && path.startsWith("video")) {
+      singleVideo = videoData.find(v => v.postId === path);
       if (singleVideo) {
         filteredData = [singleVideo];
       } else {
-        filteredData = [];
         document.getElementById("video-container").innerHTML = "<p>Video not found.</p>";
         return;
       }
     } else {
-      filteredData = videoData; // show all videos
+      filteredData = videoData;
     }
 
-    initFilters(); // optional for homepage
-    applyFilters(); // renders either one video or all
+    // Run only if not showing 1 video manually
+    if (!singleVideo) {
+      initFilters();
+    }
+
+    applyFilters();
   });
 
 function initFilters() {
