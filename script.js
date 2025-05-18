@@ -38,13 +38,12 @@ let currentPage = 1;
 const videosPerPage = 5;
 let activePostId = null;
 
+const path = window.location.pathname.replace('/', '').split('?')[0];
+const isSinglePost = path && path !== "index.html";
+
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    const path = window.location.pathname.replace('/', '').split('?')[0];
-    const isSinglePost = path && path !== "index.html";
-
-    let filteredData;
 
     if (isSinglePost) {
       const video = data.find(v => v.postId === path);
