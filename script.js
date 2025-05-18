@@ -45,20 +45,17 @@ const isSinglePost = path && path !== "index.html";
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
+    videoData = data; // <-- ADD THIS LINE
     filteredData = data;
 
     if (isSinglePost) {
-      // Show just one video
       const video = filteredData.find(v => v.postId === path);
-      if (video) {
-        filteredData = [video]; // override to just this one
-      } else {
-        filteredData = []; // no match
-      }
+      filteredData = video ? [video] : [];
     }
 
     renderVideos();
     if (!isSinglePost) renderPagination();
+    initFilters(); // <-- make sure this runs too
   });
 
 function initFilters() {
