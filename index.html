@@ -18,7 +18,7 @@
 </head>
 <body>
   <header>
-    <h1>D' Best Site</h1>
+    <h1 id="site-title">D' Best Site</h1>
     <input type="text" id="search" placeholder="Search videos..." />
     
   <div id="custom-tag" class="custom-tag">
@@ -60,6 +60,10 @@
    });
 
   
+  document.getElementById("site-title").addEventListener("click", () => {
+    location.reload();
+  });
+
   </script>
   
 <script type="module" src="adBanner.js"></script>
