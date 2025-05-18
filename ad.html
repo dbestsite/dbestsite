@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="ad-box">
+    <!-- Your ad -->
+    <script type="text/javascript">
+      atOptions = {
+        'key': '3fd06e470aa458bb431fe4292040260d',
+        'format': 'iframe',
+        'height': 600,
+        'width': 160,
+        'params': {}
+      };
+    </script>
+    <script type="text/javascript" src="//swollenbasis.com/3fd06e470aa458bb431fe4292040260d/invoke.js"></script>
+  </div>
+  <p>Redirecting to video in <span id="countdown">5</span> seconds...</p>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectTo = urlParams.get("to");
+    let seconds = 5;
+    const countdown = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      seconds--;
+      countdown.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = redirectTo || "/";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
