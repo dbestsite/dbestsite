@@ -83,6 +83,7 @@ function initFilters() {
   searchInput.addEventListener("input", applyFilters);
 }
 
+const selectedTags = new Set();
 function applyTagFilter(tag) {
   if (selectedTags.has(tag)) {
     selectedTags.delete(tag);
@@ -94,6 +95,7 @@ function applyTagFilter(tag) {
   highlightCustomTagButtons();
 }
 window.applyTagFilter = applyTagFilter;
+
 function highlightCustomTagButtons() {
   document.querySelectorAll('#custom-tag button').forEach(btn => {
     const tag = btn.textContent.toLowerCase().includes("short") ? "shortvids" : "fullvids";
