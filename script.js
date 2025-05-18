@@ -38,36 +38,27 @@ let currentPage = 1;
 const videosPerPage = 5;
 let activePostId = null;
 
+const path = window.location.pathname.replace('/', '').split('?')[0]; // handle trailing slashes/queries
+const isSinglePost = path && path !== "index.html";
+
+// After loading videos.json
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    videoData = data.sort((a, b) => {
-      const idA = parseInt(a.postId.replace('video', ''));
-      const idB = parseInt(b.postId.replace('video', ''));
-      return idB - idA;
-    });
+    filteredData = data;
 
-    const path = window.location.pathname.slice(1); // e.g., "video123"
-    let singleVideo = null;
-
-    if (path && path.startsWith("video")) {
-      singleVideo = videoData.find(v => v.postId === path);
-      if (singleVideo) {
-        filteredData = [singleVideo];
+    if (isSinglePost) {
+      // Show just one video
+      const video = filteredData.find(v => v.postId === path);
+      if (video) {
+        filteredData = [video]; // override to just this one
       } else {
-        document.getElementById("video-container").innerHTML = "<p>Video not found.</p>";
-        return;
+        filteredData = []; // no match
       }
-    } else {
-      filteredData = videoData;
     }
 
-    // Run only if not showing 1 video manually
-    if (!singleVideo) {
-      initFilters();
-    }
-
-    applyFilters();
+    renderVideos();
+    if (!isSinglePost) renderPagination();
   });
 
 function initFilters() {
