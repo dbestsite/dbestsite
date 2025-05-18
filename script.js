@@ -30,7 +30,7 @@ const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
 
-
+let adShown = sessionStorage.getItem("adShown") === "true";
 let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
@@ -140,37 +140,82 @@ function renderVideos() {
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
+  // Show "Back to All Videos" if viewing one post
   if (filteredData.length === 1) {
-  const backButton = document.createElement("button");
-  backButton.textContent = "Back to All Videos";
-  backButton.onclick = () => {
-    window.location.href = "/";
-  };
-  videoContainer.appendChild(backButton);
-}
-  
-pageVideos.forEach(video => {
-  const card = document.createElement("div");
-  card.className = "video-card";
-  card.innerHTML = `
-    <h3><a href="/${video.postId}">${video.title}</a></h3>
-    <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-    <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-    <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-  `;
-  videoContainer.appendChild(card);
+    const backButton = document.createElement("button");
+    backButton.textContent = "Back to All Videos";
+    backButton.onclick = () => {
+      window.location.href = "/";
+    };
+    videoContainer.appendChild(backButton);
+  }
 
-  // Set video start time
-  const videoEl = card.querySelector("video");
-  videoEl.addEventListener("loadedmetadata", () => {
-    videoEl.currentTime = 1;
+  pageVideos.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `
+      <h3><a href="/${video.postId}" class="video-link">${video.title}</a></h3>
+      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
+    videoContainer.appendChild(card);
+
+    // Start video at 1 second
+    const videoEl = card.querySelector("video");
+    videoEl.addEventListener("loadedmetadata", () => {
+      videoEl.currentTime = 1;
+    });
+
+    // Handle first-time ad popup before link redirect
+    const link = card.querySelector(".video-link");
+    link.addEventListener("click", (e) => {
+      if (!adShown) {
+        e.preventDefault(); // Prevent default navigation
+        showAdPopup(() => {
+          adShown = true;
+          sessionStorage.setItem("adShown", "true");
+          window.location.href = `/${video.postId}`;
+        });
+      }
+    });
   });
-
+}
   // >>> THIS is what you're missing:
   setupRatingSystem(video.postId);
 });
 }
 
+function showAdPopup(onClose) {
+  const popup = document.getElementById('ad-popup');
+  const adContainer = document.getElementById('ad-container');
+  popup.style.display = 'flex';
+
+  // Inject ad script
+  adContainer.innerHTML = '';
+  const adScript1 = document.createElement('script');
+  adScript1.type = 'text/javascript';
+  adScript1.innerHTML = `
+    atOptions = {
+      'key' : '3fd06e470aa458bb431fe4292040260d',
+      'format' : 'iframe',
+      'height' : 600,
+      'width' : 160,
+      'params' : {}
+    };
+  `;
+  const adScript2 = document.createElement('script');
+  adScript2.type = 'text/javascript';
+  adScript2.src = '//swollenbasis.com/3fd06e470aa458bb431fe4292040260d/invoke.js';
+
+  adContainer.appendChild(adScript1);
+  adContainer.appendChild(adScript2);
+
+  document.getElementById('close-ad').onclick = () => {
+    popup.style.display = 'none';
+    onClose();
+  };
+}
 
 // Disable right-click
 document.addEventListener("contextmenu", e => e.preventDefault());
