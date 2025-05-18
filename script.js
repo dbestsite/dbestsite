@@ -30,7 +30,7 @@ const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
 
-let adShown = sessionStorage.getItem("adShown") === "true";
+
 let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
