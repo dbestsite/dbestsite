@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterPopup();
 });
 
-
 import { setupRatingSystem } from './rating.js';
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -29,28 +28,22 @@ const searchInput = document.getElementById("search");
 const tagFilter = document.getElementById("tag-filter");
 const pagination = document.getElementById("pagination");
 
-
-
 let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
 let currentPage = 1;
 const videosPerPage = 5;
-let activePostId = null;
-
-const path = window.location.pathname.replace('/', '').split('?')[0];
-const isSinglePost = path && path !== "index.html";
 
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
     videoData = data;
-
     const path = window.location.pathname.replace('/', '').split('?')[0];
     const isSinglePost = path && path !== "index.html";
 
     if (isSinglePost) {
       filterByPostId(path);
+      pagination.innerHTML = "";
     } else {
       filteredData = data;
       renderVideos();
@@ -85,13 +78,14 @@ function applyTagFilter(tag) {
   if (selectedTags.has(tag)) {
     selectedTags.delete(tag);
   } else {
-    selectedTags.clear(); // optional: for single-select behavior
+    selectedTags.clear();
     selectedTags.add(tag);
   }
   applyFilters();
   highlightCustomTagButtons();
 }
 window.applyTagFilter = applyTagFilter;
+
 function highlightCustomTagButtons() {
   document.querySelectorAll('#custom-tag button').forEach(btn => {
     const tag = btn.textContent.toLowerCase().includes("short") ? "shortvids" : "fullvids";
@@ -102,7 +96,6 @@ function highlightCustomTagButtons() {
     }
   });
 }
-
 
 function applyFilters() {
   const term = searchInput.value.toLowerCase();
@@ -139,41 +132,50 @@ function renderVideos() {
   const pageVideos = filteredData.slice(start, end);
 
   if (filteredData.length === 1) {
-  const backButton = document.createElement("button");
-  backButton.textContent = "Back to All Videos";
-  backButton.onclick = () => {
-    window.location.href = "/";
-  };
-  videoContainer.appendChild(backButton);
-}
-  
-pageVideos.forEach(video => {
-  const card = document.createElement("div");
-  card.className = "video-card";
-  card.innerHTML = `
-    <h3><a href="/${video.postId}">${video.title}</a></h3>
-    <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-    <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-    <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-  `;
-  videoContainer.appendChild(card);
+    const backButton = document.createElement("button");
+    backButton.textContent = "Back to All Videos";
+    backButton.onclick = () => {
+      history.pushState({}, "", "/");
+      filteredData = videoData;
+      currentPage = 1;
+      renderVideos();
+      renderPagination();
+    };
+    videoContainer.appendChild(backButton);
+  }
 
-  // Set video start time
-  const videoEl = card.querySelector("video");
-  videoEl.addEventListener("loadedmetadata", () => {
-    videoEl.currentTime = 1;
+  pageVideos.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `
+      <h3><a href="#" class="post-link" data-id="${video.postId}">${video.title}</a></h3>
+      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
+    videoContainer.appendChild(card);
+
+    // Handle single post navigation
+    card.querySelector(".post-link").addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = e.target.dataset.id;
+      history.pushState({ id }, "", `/${id}`);
+      filterByPostId(id);
+      pagination.innerHTML = "";
+    });
+
+    // Start time handling
+    const videoEl = card.querySelector("video");
+    videoEl.addEventListener("loadedmetadata", () => {
+      videoEl.currentTime = 1;
+    });
+
+    setupRatingSystem(video.postId);
   });
-
-  // >>> THIS is what you're missing:
-  setupRatingSystem(video.postId);
-});
 }
 
-
-// Disable right-click
 document.addEventListener("contextmenu", e => e.preventDefault());
 
-// Auto pause videos out of view
 function checkVideoVisibility() {
   document.querySelectorAll("video").forEach(video => {
     const rect = video.getBoundingClientRect();
@@ -186,10 +188,23 @@ function checkVideoVisibility() {
 }
 window.addEventListener("scroll", checkVideoVisibility);
 
-// Comment Modal Handling
 function filterByPostId(postId) {
   const match = videoData.find(v => v.postId === postId);
   filteredData = match ? [match] : [];
   currentPage = 1;
   renderVideos();
 }
+
+// Enable back/forward browser navigation
+window.addEventListener("popstate", () => {
+  const path = window.location.pathname.replace("/", "").split("?")[0];
+  if (path && path !== "index.html") {
+    filterByPostId(path);
+    pagination.innerHTML = "";
+  } else {
+    filteredData = videoData;
+    currentPage = 1;
+    renderVideos();
+    renderPagination();
+  }
+});
