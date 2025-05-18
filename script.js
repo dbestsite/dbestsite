@@ -88,12 +88,12 @@ function applyTagFilter(tag) {
   if (selectedTags.has(tag)) {
     selectedTags.delete(tag);
   } else {
-    selectedTags.clear(); // optional: for single-select behavior
     selectedTags.add(tag);
   }
   applyFilters();
   highlightCustomTagButtons();
 }
+
 window.applyTagFilter = applyTagFilter;
 
 function highlightCustomTagButtons() {
