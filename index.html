@@ -11,7 +11,7 @@
 </head>
 <body>
   <header>
-    <h1 id="site-title"><a href="https://dbestsite.netlify.app/">D' Best Site</a></h1>
+    <h1 id="site-title" class="site-title"><a href="https://dbestsite.netlify.app/">D' Best Site</a></h1>
     <input type="text" id="search" placeholder="Search videos..." />
     
   <div id="custom-tag" class="custom-tag">
@@ -29,7 +29,7 @@
 </div>
 
 <div id="pagination" class="pagination-controls"></div>
-<div id="tag-filter"></div>
+<div id="tag-filter" class="tag-filter"></div>
 
   </main>  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
     <p>© 2025 D' Best Site. All rights reserved.</p>
@@ -49,6 +49,18 @@
     adIds.forEach(id => insertBannerAd(id));
    });
   </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const scrollTriggerClasses = [".custom-tag", ".site-title", ".pagination-controls", ".tag-filter",".post-link"]; // Add more selectors as needed
+
+    document.body.addEventListener("click", function (e) {
+      const clickedEl = e.target.closest(scrollTriggerClasses.join(", "));
+      if (clickedEl) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  });
+</script>
   
 <script type="module" src="adBanner.js"></script>
 <script type="module" src="pcAds.js"></script>
