@@ -3,7 +3,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>D' Best Site</title>
+  <script>
+    const redirected = sessionStorage.redirect;
+    if (redirected) {
+      history.replaceState(null, '', redirected);
+      sessionStorage.removeItem('redirect');
+    }
+  </script>
   <link rel="stylesheet" href="style.css" />
+  <!-- your other scripts, styles, etc. -->
   <script type="module" src="rating.js"></script>
   <script type='text/javascript' src='//swollenbasis.com/10/24/b0/1024b00b714752a34b3ca526c2508afc.js'></script>
 </head>
@@ -45,11 +53,7 @@
     adIds.forEach(id => insertBannerAd(id));
    });
 
-  const redirected = sessionStorage.redirect;
-if (redirected) {
-  history.replaceState(null, '', redirected);
-  sessionStorage.removeItem('redirect');
-}
+  
   </script>
   
 <script type="module" src="adBanner.js"></script>
