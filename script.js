@@ -38,24 +38,26 @@ let currentPage = 1;
 const videosPerPage = 5;
 let activePostId = null;
 
-const path = window.location.pathname.replace('/', '').split('?')[0]; // handle trailing slashes/queries
-const isSinglePost = path && path !== "index.html";
-
-// After loading videos.json
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
-    videoData = data; // <-- ADD THIS LINE
-    filteredData = data;
+    const path = window.location.pathname.replace('/', '').split('?')[0];
+    const isSinglePost = path && path !== "index.html";
+
+    let filteredData;
 
     if (isSinglePost) {
-      const video = filteredData.find(v => v.postId === path);
+      const video = data.find(v => v.postId === path);
       filteredData = video ? [video] : [];
+    } else {
+      filteredData = data;
     }
 
+    videoData = data;
+    
     renderVideos();
     if (!isSinglePost) renderPagination();
-    initFilters(); // <-- make sure this runs too
+    initFilters();
   });
 
 function initFilters() {
