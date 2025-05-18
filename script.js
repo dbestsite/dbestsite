@@ -48,6 +48,7 @@ fetch('videos.json')
     });
 
     const path = window.location.pathname.slice(1); // e.g., "video123"
+
     if (path) {
       const singleVideo = videoData.find(v => v.postId === path);
       if (singleVideo) {
@@ -58,15 +59,11 @@ fetch('videos.json')
         return;
       }
     } else {
-      filteredData = videoData;
+      filteredData = videoData; // show all videos
     }
-    
-if (!singleVideo) {
-  videoContainer.innerHTML = "<p>Video not found.</p>";
-  return;
-}
-    initFilters(); // you can optionally skip this for single video view
-    applyFilters();
+
+    initFilters(); // optional for homepage
+    applyFilters(); // renders either one video or all
   });
 
 function initFilters() {
