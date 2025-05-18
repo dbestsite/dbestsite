@@ -32,7 +32,7 @@ let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
 let currentPage = 1;
-const videosPerPage = 5;
+const videosPerPage = 6;
 
 fetch('videos.json')
   .then(res => res.json())
