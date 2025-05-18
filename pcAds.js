@@ -44,8 +44,7 @@ export function insertBannerAds(containerIds) {
 }
 
 // Auto-apply on resize if entering desktop mode
-window.addEventListener('resize', () => {
-  if (!isDesktopLike()) return;
-  insertedAds.clear(); // Clear history to allow re-insertion
-  insertBannerAds(['pcad1', 'pcad2', 'pcad3','pcad4']); // Add your ad container IDs here
-});
+// Trigger once on page load if on desktop
+if (isDesktopLike()) {
+  insertBannerAds(['pcad1', 'pcad2', 'pcad3', 'pcad4']);
+}
