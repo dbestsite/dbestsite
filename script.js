@@ -134,13 +134,13 @@ function renderPagination() {
   }
 }
 
+
 function renderVideos() {
   videoContainer.innerHTML = "";
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
-  // Show "Back to All Videos" if viewing one post
   if (filteredData.length === 1) {
     const backButton = document.createElement("button");
     backButton.textContent = "Back to All Videos";
@@ -161,22 +161,17 @@ function renderVideos() {
     `;
     videoContainer.appendChild(card);
 
-    // Start video at 1 second
     const videoEl = card.querySelector("video");
     videoEl.addEventListener("loadedmetadata", () => {
       videoEl.currentTime = 1;
     });
 
-    // Handle first-time ad popup before link redirect
     const link = card.querySelector(".video-link");
     link.addEventListener("click", (e) => {
       if (!adShown) {
-        e.preventDefault(); // Prevent default navigation
-        showAdPopup(() => {
-          adShown = true;
-          sessionStorage.setItem("adShown", "true");
-          window.location.href = `/${video.postId}`;
-        });
+        e.preventDefault();
+        sessionStorage.setItem("adShown", "true");
+        window.location.href = `/ad.html?to=/${video.postId}`;
       }
     });
   
