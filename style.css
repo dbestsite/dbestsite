@@ -213,3 +213,11 @@ video {
   color: #121212;
   border-color: #00ff99;
 }
+
+.video-card {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+.video-card:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
