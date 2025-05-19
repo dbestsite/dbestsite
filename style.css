@@ -26,7 +26,7 @@ header h1 {
 .site-title a:active, .site-title a:focus {
   outline: none;
 }
-.site-title a {
+.site-title, a {
   text-decoration: none;
   color: inherit;
 }
@@ -82,9 +82,15 @@ main {
   box-shadow: 0 0 10px rgba(0, 255, 153, 0.2);
 }
 
+.video-card h3:active, .video-card h3:focus {
+  outline: none;
+}
+
 .video-card h3 {
   margin-top: 0;
   color: #00ff99;
+  text-decoration: none;
+  color: inherit;
 }
 
 video {
