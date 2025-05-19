@@ -23,7 +23,7 @@ header h1 {
 .header-content {
   display: grid;
   gap: 1em;
-  align-content: center;
+  align-items: center;
   justify-content: center;
 
 /* Mobile view: each content on a new line */
