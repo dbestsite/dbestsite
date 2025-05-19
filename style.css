@@ -8,8 +8,9 @@ body {
 header {
   background: #1e1e1e;
   padding: 1rem;
-  text-align: left;
-  display: grid;
+  align-items: left;
+  display: flex;
+  justify-content: flex-end;
 }
 
 header h1 {
@@ -17,6 +18,11 @@ header h1 {
   color: #00ff99;
 }
 
+.header-content{
+  display:flex;
+  flex-direction:row;
+  align-items:left;
+}
 .site-title a:active, .site-title a:focus {
   outline: none;
 }
