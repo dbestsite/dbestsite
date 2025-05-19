@@ -129,7 +129,7 @@ function renderPagination() {
 function renderVideos() {
   videoContainer.innerHTML = "";
 
-  // Dynamically determine if it's a single post view
+  // Determine if a single video is being shown
   const path = window.location.pathname.replace('/', '').split('?')[0];
   const isSinglePost = path && path !== "index.html";
 
@@ -137,6 +137,7 @@ function renderVideos() {
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
+  // Back button for single view
   if (filteredData.length === 1) {
     const backButton = document.createElement("button");
     backButton.textContent = "Back to All Videos";
@@ -153,6 +154,7 @@ function renderVideos() {
   pageVideos.forEach(video => {
     const card = document.createElement("div");
     card.className = "video-card";
+
     card.innerHTML = `
       <h3>${video.title}</h3>
       <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
@@ -160,14 +162,14 @@ function renderVideos() {
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    // Add invisible wall only if not in single post view
+    // Link logic using uniqueId
     if (!isSinglePost) {
       const wall = document.createElement("div");
       wall.className = "video-wall";
       wall.addEventListener("click", () => {
-        const id = video.postId;
-        history.pushState({ id }, "", `/${id}`);
-        filterByPostId(id);
+        const uid = video.uniqueId;
+        history.pushState({ uid }, "", `/${uid}`);
+        filterByUniqueId(uid);
         pagination.innerHTML = "";
       });
       card.appendChild(wall);
@@ -176,13 +178,15 @@ function renderVideos() {
     videoContainer.appendChild(card);
 
     const videoEl = card.querySelector("video");
-videoEl.addEventListener("loadedmetadata", () => {
-  videoEl.currentTime = video.start || 1;
-});
+    videoEl.addEventListener("loadedmetadata", () => {
+      videoEl.currentTime = video.start || 1;
+    });
 
+    // Ratings still use postId
     setupRatingSystem(video.postId);
   });
 }
+
 
 document.addEventListener("contextmenu", e => e.preventDefault());
 
@@ -198,8 +202,8 @@ function checkVideoVisibility() {
 }
 window.addEventListener("scroll", checkVideoVisibility);
 
-function filterByPostId(postId) {
-  const match = videoData.find(v => v.postId === postId);
+function filterByUniqueId(uid) {
+  const match = videoData.find(v => v.uniqueId === uid);
   filteredData = match ? [match] : [];
   currentPage = 1;
   renderVideos();
