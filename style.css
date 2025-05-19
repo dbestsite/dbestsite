@@ -21,7 +21,8 @@ header h1 {
 .header-content{
   display:flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: left;
+  margin-left: 1em;
 }
 .site-title a:active, .site-title a:focus {
   outline: none;
