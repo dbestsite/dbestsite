@@ -34,12 +34,13 @@ let selectedTags = new Set();
 let currentPage = 1;
 const videosPerPage = 9;
 
+let isSinglePost = false;
 fetch('videos.json')
   .then(res => res.json())
   .then(data => {
     videoData = data;
     const path = window.location.pathname.replace('/', '').split('?')[0];
-    const isSinglePost = path && path !== "index.html";
+    isSinglePost = path && path !== "index.html";
 
     if (isSinglePost) {
       filterByPostId(path);
@@ -148,25 +149,25 @@ function renderVideos() {
     const card = document.createElement("div");
     card.className = "video-card";
     card.innerHTML = `
-      <h3><a href="#" class="post-link" data-id="${video.postId}">${video.title}</a></h3>
+      <h3>${video.title}</h3>
       <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
     videoContainer.appendChild(card);
 
-    // Handle single post navigation
-    card.addEventListener("click", (e) => {
-  // prevent navigation when clicking on elements like the video or rating box
-  if (e.target.closest("video") || e.target.closest(".rating-box") || e.target.closest("button")) return;
+    // >>> PLACE THIS RIGHT AFTER APPENDING THE CARD <<<
+    if (!isSinglePost) {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest("video") || e.target.closest(".rating-box") || e.target.closest("button")) return;
+        const id = video.postId;
+        history.pushState({ id }, "", `/${id}`);
+        filterByPostId(id);
+        pagination.innerHTML = "";
+      });
+      card.style.cursor = "pointer";
+    }
 
-  const id = video.postId;
-  history.pushState({ id }, "", `/${id}`);
-  filterByPostId(id);
-  pagination.innerHTML = "";
-});
-
-    // Start time handling
     const videoEl = card.querySelector("video");
     videoEl.addEventListener("loadedmetadata", () => {
       videoEl.currentTime = 1;
