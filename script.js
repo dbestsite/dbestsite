@@ -180,7 +180,8 @@ videoEl.addEventListener("loadedmetadata", () => {
   videoEl.currentTime = video.start || 1;
 });
 
-    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0);
+    setupRatingSystem(video.postId);
+  });
 }
 
 document.addEventListener("contextmenu", e => e.preventDefault());
