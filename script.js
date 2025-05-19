@@ -155,10 +155,14 @@ function renderVideos() {
     const card = document.createElement("div");
     card.className = "video-card";
 
+    const tagsArray = Array.isArray(video.tags)
+  ? video.tags
+  : video.tags.split(',').map(t => t.trim());
+
     card.innerHTML = `
       <h3>${video.title}</h3>
       <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-      <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
