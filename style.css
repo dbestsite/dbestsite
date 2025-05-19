@@ -10,6 +10,10 @@ header {
   padding: 1rem;
 }
 
+.site-logo {
+  width: 6.5rem; height; 5rem; margin-right: 1rem;
+}
+
 header h1 {
   margin: 0 0 0.5rem 0;
   color: #00ff99;
