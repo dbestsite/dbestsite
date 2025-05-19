@@ -61,7 +61,7 @@ main {
 }
 
 #tag-filter {
-  text-align: left;
+  text-align: center;
   margin-bottom: 1rem;
 }
 
@@ -216,7 +216,6 @@ video {
 
 .video-card {
   position: relative;
-  overflow: hidden;
 }
 
 .video-wall {
@@ -225,7 +224,7 @@ video {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.05); /* 5% black */
   z-index: 10;
   cursor: pointer;
 }
