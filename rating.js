@@ -70,11 +70,15 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
   const ratingRef = ref(db, `ratings/${postId}`);
 
   // Initialize Firebase data if not exists
-  get(ratingRef).then(snapshot => {
-    if (!snapshot.exists() && initialVotes && initialSum) {
-      set(ratingRef, { votes: initialVotes, sum: initialSum });
-    }
-  });
+  // Initialize Firebase data if not exists
+get(ratingRef).then(snapshot => {
+  if (!snapshot.exists()) {
+    set(ratingRef, {
+      votes: initialVotes,
+      sum: initialSum
+    });
+  }
+});
 
   // Listen for changes to update UI
   onValue(ratingRef, (snapshot) => {
