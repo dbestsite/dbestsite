@@ -154,24 +154,21 @@ function renderVideos() {
       <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
-    videoContainer.appendChild(card);
 
-    // >>> PLACE THIS RIGHT AFTER APPENDING THE CARD <<<
+    // Add the clickable black wall if not in single post view
     if (!isSinglePost) {
-  card.addEventListener("click", (e) => {
-    if (
-      e.target.closest("video") ||
-      e.target.closest(".rating-box") ||
-      e.target.closest("button") ||
-      e.target.closest("a")
-    ) return;
-
-    // Simulate a click on the title link
-    const link = card.querySelector(".post-link");
-    if (link) link.click();
-  });
-  card.style.cursor = "pointer";
+      const wall = document.createElement("div");
+      wall.className = "video-wall";
+      wall.addEventListener("click", () => {
+        const id = video.postId;
+        history.pushState({ id }, "", `/${id}`);
+        filterByPostId(id);
+        pagination.innerHTML = "";
+      });
+      card.appendChild(wall);
     }
+
+    videoContainer.appendChild(card);
 
     const videoEl = card.querySelector("video");
     videoEl.addEventListener("loadedmetadata", () => {
