@@ -15,16 +15,31 @@
 </head>
 <body>
   <header>
-    <h1 id="site-title" class="site-title">
-  <img src="/favicon.png" alt="Site Icon" style="height: 1em; margin-right: 0.2em;">
-  <a href="https://dbestsite.netlify.app/">D' Best Site</a></h1>
-    <input type="text" id="search" placeholder="Search videos..." />
-    
-  <div id="custom-tag" class="custom-tag">
-   <button onclick="applyTagFilter('shortvids')">Short Videos</button>
-   <button onclick="applyTagFilter('fullvids')">Long Videos</button>
+       <header style="display: flex;">
+
+  <img src="https://dbestsite.netlify.app/favicon.png" style="width: 8rem; height:8rem; text-align: right;"/>                                                                                            
+
+  <div style="display: flex; flex-direction: column;">
+
+    <h1 id="site-title" class="site-title" style="">
+
+      <a href="https://dbestsite.netlify.app/">D' Best Site</a>
+
+    </h1>
+
+    <input type="text" id="search" placeholder="Search videos...">
+
+    <div id="custom-tag" class="custom-tag">
+
+      <button onclick="applyTagFilter('shortvids')">Short Videos</button>
+
+      <button onclick="applyTagFilter('fullvids')">Long Videos</button>
+
+    </div>
+
   </div>
-  </header>
+
+       </header>
   <main>
     <div class="adgrid">
       <div id="ad1"></div><div id="ad2"></div><div id="pcad1"></div><div id="pcad2"></div>
