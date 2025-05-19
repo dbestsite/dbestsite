@@ -158,14 +158,19 @@ function renderVideos() {
 
     // >>> PLACE THIS RIGHT AFTER APPENDING THE CARD <<<
     if (!isSinglePost) {
-      card.addEventListener("click", (e) => {
-        if (e.target.closest("video") || e.target.closest(".rating-box") || e.target.closest("button")) return;
-        const id = video.postId;
-        history.pushState({ id }, "", `/${id}`);
-        filterByPostId(id);
-        pagination.innerHTML = "";
-      });
-      card.style.cursor = "pointer";
+  card.addEventListener("click", (e) => {
+    if (
+      e.target.closest("video") ||
+      e.target.closest(".rating-box") ||
+      e.target.closest("button") ||
+      e.target.closest("a")
+    ) return;
+
+    // Simulate a click on the title link
+    const link = card.querySelector(".post-link");
+    if (link) link.click();
+  });
+  card.style.cursor = "pointer";
     }
 
     const videoEl = card.querySelector("video");
