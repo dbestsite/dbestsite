@@ -16,6 +16,14 @@ header h1 {
   color: #00ff99;
 }
 
+.site-title a:active, .site-title a:focus {
+  outline: none;
+}
+.site-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
 #search {
   padding: 0.5rem;
   width: 80%;
