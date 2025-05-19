@@ -22,8 +22,9 @@ header h1 {
 
 .header-content{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  
+grid-template-columns: repeat(auto-fit, minmax(0, auto));
+gap: 1em;
+
 }
 .site-title a:active, .site-title a:focus {
   outline: none;
