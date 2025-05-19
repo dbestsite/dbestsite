@@ -176,9 +176,9 @@ function renderVideos() {
     videoContainer.appendChild(card);
 
     const videoEl = card.querySelector("video");
-    videoEl.addEventListener("loadedmetadata", () => {
-      videoEl.currentTime = 1;
-    });
+videoEl.addEventListener("loadedmetadata", () => {
+  videoEl.currentTime = video.start || 1;
+});
 
     setupRatingSystem(video.postId);
   });
