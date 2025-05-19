@@ -20,12 +20,23 @@ header h1 {
   color: #00ff99;
 }
 
-.header-content{
+.header-content {
   display: grid;
-grid-template-columns: repeat(auto-fit, minmax(0, auto));
-gap: 1em;
-
+  gap: 1em;
 }
+
+/* Mobile view: each content on a new line */
+.header-content {
+  grid-template-columns: 1fr;
+}
+
+/* PC view: contents in a single row */
+@media (min-width: 768px) {
+  .header-content {
+    grid-template-columns: repeat(auto-fit, minmax(0, auto));
+  }
+}
+
 .site-title a:active, .site-title a:focus {
   outline: none;
 }
