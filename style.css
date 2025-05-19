@@ -18,7 +18,6 @@ header {
 header h1 {
   margin: 0 0 0.5rem 0;
   color: #00ff99;
-  align-items: center;
 }
 
 .header-content {
@@ -38,6 +37,9 @@ header h1 {
   }
 }
 
+.site-title {
+  align-items: center;
+}
 .site-title a:active, .site-title a:focus {
   outline: none;
 }
