@@ -156,13 +156,15 @@ function renderVideos() {
     videoContainer.appendChild(card);
 
     // Handle single post navigation
-    card.querySelector(".post-link").addEventListener("click", (e) => {
-      e.preventDefault();
-      const id = e.target.dataset.id;
-      history.pushState({ id }, "", `/${id}`);
-      filterByPostId(id);
-      pagination.innerHTML = "";
-    });
+    card.addEventListener("click", (e) => {
+  // prevent navigation when clicking on elements like the video or rating box
+  if (e.target.closest("video") || e.target.closest(".rating-box") || e.target.closest("button")) return;
+
+  const id = video.postId;
+  history.pushState({ id }, "", `/${id}`);
+  filterByPostId(id);
+  pagination.innerHTML = "";
+});
 
     // Start time handling
     const videoEl = card.querySelector("video");
