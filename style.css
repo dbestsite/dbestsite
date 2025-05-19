@@ -24,7 +24,7 @@ header h1 {
   display: grid;
   gap: 1em;
   align-items: center;
-  justify-content: center;
+  justify-items: start;
 
 /* Mobile view: each content on a new line */
   grid-template-columns: 1fr;
