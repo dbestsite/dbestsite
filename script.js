@@ -128,6 +128,11 @@ function renderPagination() {
 
 function renderVideos() {
   videoContainer.innerHTML = "";
+
+  // Dynamically determine if it's a single post view
+  const path = window.location.pathname.replace('/', '').split('?')[0];
+  const isSinglePost = path && path !== "index.html";
+
   const start = (currentPage - 1) * videosPerPage;
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
@@ -155,7 +160,7 @@ function renderVideos() {
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    // Add the clickable black wall if not in single post view
+    // Add invisible wall only if not in single post view
     if (!isSinglePost) {
       const wall = document.createElement("div");
       wall.className = "video-wall";
