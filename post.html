@@ -2,62 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>D' Best Site - Video Post</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video Post | D' Best Site</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png">
   <script type="module" src="rating.js"></script>
-  <script type="module" src="adBanner.js"></script>
+  <script type='text/javascript' src='//swollenbasis.com/10/24/b0/1024b00b714752a34b3ca526c2508afc.js'></script>
 </head>
 <body>
-  <header>
-    <h1>D' Best Site</h1>
-    <button onclick="window.location.href='index.html'">Back to All Videos</button>
+  <header class="header">
+    <div class="header-content">
+      <h1 id="site-title" class="site-title">
+        <img class="site-logo" src="https://dbestsite.netlify.app/favicon.png"/>
+        <a href="https://dbestsite.netlify.app/" style="text-decoration: none; color: inherit;">D' Best Site</a>
+      </h1>
+    </div>
   </header>
 
-  <div id="ad1" class="ad-container"></div>
-
   <main>
-    <div id="video-container" class="video-detail"></div>
+    <div id="video-container" class="grid"></div>
   </main>
 
-  <div id="ad2" class="ad-container"></div>
-
-  <footer>
-    <p>&copy; 2025 D' Best Site. All rights reserved.</p>
+  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
+    <p>© 2025 D' Best Site. All rights reserved.</p>
+    <p>
+      <a href="#">Privacy Policy</a> |
+      <a href="#">About Us</a> |
+      <a href="#">Contact</a>
+    </p>
   </footer>
 
-  <script type="module">
-    import { setupRatingSystem } from './rating.js';
-
-    const container = document.getElementById("video-container");
-    const params = new URLSearchParams(window.location.search);
-    const uid = params.get("uid");
-
-    fetch("videos.json")
-      .then(res => res.json())
-      .then(data => {
-        const video = data.find(v => v.uniqueId === uid);
-        if (!video) {
-          container.innerHTML = "<p>Video not found.</p>";
-          return;
-        }
-
-        const card = document.createElement("div");
-        card.className = "video-card";
-
-        card.innerHTML = `
-          <h2>${video.title}</h2>
-          <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-          <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
-          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-        `;
-
-        container.appendChild(card);
-        setupRatingSystem(video.postId);
-      });
-
-    // Disable right-click
-    document.addEventListener("contextmenu", e => e.preventDefault());
-  </script>
+  <script type="module" src="adBanner.js"></script>
+  <script type="module" src="pcAds.js"></script>
+  <script type="module" src="postScript.js"></script>
 </body>
 </html>
