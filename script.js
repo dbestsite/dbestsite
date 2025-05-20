@@ -54,7 +54,15 @@ fetch('videos.json')
   });
 
 function initFilters() {
-  const allTags = [...new Set(videoData.flatMap(v => v.tags))];
+  const allTags = [
+  ...new Set(
+    videoData.flatMap(v =>
+      Array.isArray(v.tags)
+        ? v.tags
+        : v.tags.split(',').map(t => t.trim())
+    )
+  )
+];
 
   allTags.forEach(tag => {
     const btn = document.createElement("button");
