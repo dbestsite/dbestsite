@@ -181,7 +181,7 @@ function renderVideos() {
     const backButton = document.createElement("button");
     backButton.textContent = "Back to All Videos";
     backButton.onclick = () => {
-      history.pushState({}, "", "/");
+      history.pushState({}, "", `/post.html?uId=${uid}`);
       filteredData = videoData;
       currentPage = 1;
       renderVideos();
