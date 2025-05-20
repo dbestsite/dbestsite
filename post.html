@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -14,26 +13,55 @@
     <div class="header-content">
       <h1 id="site-title" class="site-title">
         <img class="site-logo" src="https://dbestsite.netlify.app/favicon.png"/>
-        <a href="https://dbestsite.netlify.app/" style="text-decoration: none; color: inherit;">D' Best Site</a>
+        <a href="/" style="text-decoration: none; color: inherit;">D' Best Site</a>
       </h1>
     </div>
-  </header>
-
-  <main>
+  </header>  <main>
+    <div class="adgrid">
+      <div id="ad1"></div>
+    </div>
     <div id="video-container" class="grid"></div>
-  </main>
-
-  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
+  </main>  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
     <p>© 2025 D' Best Site. All rights reserved.</p>
     <p>
       <a href="#">Privacy Policy</a> |
       <a href="#">About Us</a> |
       <a href="#">Contact</a>
     </p>
-  </footer>
+  </footer>  <script type="module">
+    import { insertBannerAd } from './adBanner.js';
 
-  <script type="module" src="adBanner.js"></script>
-  <script type="module" src="pcAds.js"></script>
-  <script type="module" src="postScript.js"></script>
-</body>
+    document.addEventListener("DOMContentLoaded", async () => {
+      insertBannerAd("ad1");
+
+      const segments = window.location.pathname.split("/").filter(Boolean);
+      const uId = segments[segments.length - 1];
+      const container = document.getElementById("video-container");
+
+      const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
+      const res = await fetch(file);
+      const data = await res.json();
+      const video = data.find(v => v.uniqueId === uId);
+
+      if (!video) {
+        container.innerHTML = "<p style='color:white;'>Video not found.</p>";
+        return;
+      }
+
+      const tagsArray = Array.isArray(video.tags)
+        ? video.tags
+        : video.tags.split(',').map(t => t.trim());
+
+      container.innerHTML = `
+        <div class="video-card">
+          <h3>${video.title}</h3>
+          <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+          <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
+          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+        </div>
+      `;
+
+      setupRatingSystem(video.postId);
+    });
+  </script></body>
 </html>
