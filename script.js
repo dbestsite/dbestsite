@@ -32,7 +32,10 @@ let videoData = [];
 let filteredData = [];
 let selectedTags = new Set();
 let currentPage = 1;
+let pageGroupOffset = 0;
+const pagesPerGroup = 5;
 const videosPerPage = 9;
+
 
 let isSinglePost = false;
 fetch('videos.json')
@@ -120,8 +123,24 @@ function applyFilters() {
 
 function renderPagination() {
   pagination.innerHTML = "";
+
   const totalPages = Math.ceil(filteredData.length / videosPerPage);
-  for (let i = 1; i <= totalPages; i++) {
+  const groupStart = pageGroupOffset * pagesPerGroup + 1;
+  const groupEnd = Math.min(groupStart + pagesPerGroup - 1, totalPages);
+
+  // Prev group button
+  if (pageGroupOffset > 0) {
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "« Prev";
+    prevBtn.onclick = () => {
+      pageGroupOffset--;
+      renderPagination();
+    };
+    pagination.appendChild(prevBtn);
+  }
+
+  // Page number buttons
+  for (let i = groupStart; i <= groupEnd; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
     btn.className = i === currentPage ? "active" : "";
@@ -131,6 +150,17 @@ function renderPagination() {
       renderPagination();
     };
     pagination.appendChild(btn);
+  }
+
+  // Next group button
+  if (groupEnd < totalPages) {
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next »";
+    nextBtn.onclick = () => {
+      pageGroupOffset++;
+      renderPagination();
+    };
+    pagination.appendChild(nextBtn);
   }
 }
 
