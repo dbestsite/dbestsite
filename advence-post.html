@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video Post | D' Best Site</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script type="module" src="rating.js"></script>
+  <script type='text/javascript' src='//swollenbasis.com/10/24/b0/1024b00b714752a34b3ca526c2508afc.js'></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+       <h1 id="site-title" class="site-title">
+        <img class="site-logo" src="https://dbestsite.netlify.app/favicon.png"/>
+        <a href="/" style="text-decoration: none; color: inherit;">D' Best Site</a>
+      </h1>
+    </div>
+    <button id="back-home" style="width: 100%; background-color:#121917; color:#b8f1d9; text-align: center; border: none; font-size: 2em;"> ← Back to Home</button>
+
+  </header>  <main style="justify-content: center;">
+    <div class="adgrid">
+      <div id="ad1"></div><div id="pcad1"></div><div id="pcad2"></div>
+    </div>
+    
+       <div id="video-container" style="display:flex; flex-direction:column; align-items:center; text-align:center;"></div>
+    
+    <div class="adgrid">
+      <div id="ad2"></div><div id="ad3"></div><div id="pcad3"></div>
+    </div>
+  </main>  
+  
+  <footer style="background-color:#121917; color:#b8f1d9; padding:20px 10px; text-align:center; font-family: Arial, sans-serif; font-size: 0.9rem; margin-top: 40px;">
+    <p>© 2025 D' Best Site. All rights reserved.</p>
+    <p>
+      <a href="#">Privacy Policy</a> |
+      <a href="#">About Us</a> |
+      <a href="#">Contact</a>
+    </p>
+  </footer>  
+
+  <script type="module" src="adBanner.js"></script>
+  <script type="module" src="pcAds.js"></script>
+  <script type="module">
+  import { insertBannerAd } from './adBanner.js';
+   document.addEventListener("DOMContentLoaded", () => {
+    const adIds = ['ad1', 'ad2', 'ad3', 'ad4'];
+    adIds.forEach(id => insertBannerAd(id));
+   });
+  </script>
+  <script type="module">
+  import { insertPCAd } from './pcAds.js';
+  document.addEventListener("DOMContentLoaded", () => {
+    const pcAdIds = ['pcad1', 'pcad2','pcad3'];
+    pcAdIds.forEach(id => insertPCAd(id));
+  });
+</script>
+  <script type="module">
+  import { setupFooterPopup } from './footer.js';
+document.addEventListener("DOMContentLoaded", () => {
+  setupFooterPopup();
+});
+  import { setupRatingSystem } from './rating.js';
+
+  const hiddenFile = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
+  const videoContainer = document.getElementById("video-container");
+
+  function getUidFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("uId");
+  }
+
+  fetch(hiddenFile)
+    .then(res => res.json())
+    .then(data => {
+      const uid = getUidFromUrl();
+      const video = data.find(v => v.uniqueId === uid);
+      if (video) renderSingleVideo(video);
+      else videoContainer.innerHTML = "<p>Video not found.</p>";
+    });
+
+  function renderSingleVideo(video) {
+    const tags = Array.isArray(video.tags)
+      ? video.tags
+      : video.tags.split(',').map(t => t.trim());
+
+    videoContainer.innerHTML = `
+      <h3>${video.title}</h3>
+      <video src="${video.url}" controls autoplay muted playsinline controlsList="nodownload"></video>
+      <div class="tags">${tags.map(t => `<span>#${t}</span>`).join(" ")}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
+
+    setupRatingSystem(video.postId);
+  }
+
+document.getElementById("back-home").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+  </script>
+<script type='text/javascript' src='//swollenbasis.com/72/b5/fe/72b5fe2d3e7255140af2f158bb8293bd.js'></script>
+</body>
+</html>
