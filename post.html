@@ -43,13 +43,15 @@
   <script type="module" src="pcAds.js"></script>
   <script type="module">
   import { insertBannerAd } from './adBanner.js';
-  import { insertPCAd } from './pcAds.js';
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const adIds = ['ad1','ad2','ad3'];
-    const pcAdIds = ['pcad1', 'pcad2','pcad3'];
-
+   document.addEventListener("DOMContentLoaded", () => {
+    const adIds = ['ad1', 'ad2', 'ad3', 'ad4'];
     adIds.forEach(id => insertBannerAd(id));
+   });
+  </script>
+  <script type="module">
+  import { insertPCAd } from './pcAds.js';
+  document.addEventListener("DOMContentLoaded", () => {
+    const pcAdIds = ['pcad1', 'pcad2','pcad3'];
     pcAdIds.forEach(id => insertPCAd(id));
   });
 </script>
