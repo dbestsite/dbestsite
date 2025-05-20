@@ -16,7 +16,7 @@
         <a href="/" style="text-decoration: none; color: inherit;">D' Best Site</a>
       </h1>
     </div>
-    <button href="https://dbestsite.netlify.app/" style="width: 100%; background-color:#121917; color:#b8f1d9; text-align: center; border: none;">Back to Home</button>
+    <button id="back-home" style="width: 100%; background-color:#121917; color:#b8f1d9; text-align: center; border: none; font-size: 2em;"> ← Back to Home</button>
 
   </header>  <main>
     <div class="adgrid">
@@ -87,6 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupRatingSystem(video.postId);
   }
+
+document.getElementById("back-home").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
   </script>
 <script type='text/javascript' src='//swollenbasis.com/72/b5/fe/72b5fe2d3e7255140af2f158bb8293bd.js'></script>
 </body>
