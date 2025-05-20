@@ -38,7 +38,8 @@ const videosPerPage = 9;
 
 
 let isSinglePost = false;
-const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; //v
+const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // Path to your JSON file
+
 fetch(file)
   .then(res => res.json())
   .then(data => {
@@ -47,10 +48,10 @@ fetch(file)
     isSinglePost = path && path !== "index.html";
 
     if (isSinglePost) {
-      filterByPostId(path);
-      pagination.innerHTML = "";
+      filterByPostId(path);  // A function you'll need for single post view
+      pagination.innerHTML = ""; // Clear pagination for single post view
     } else {
-      filteredData = data;
+      filteredData = data; // Filtered videos for home page
       renderVideos();
       renderPagination();
       initFilters();
@@ -168,7 +169,6 @@ function renderPagination() {
 function renderVideos() {
   videoContainer.innerHTML = "";
 
-  // Determine if a single video is being shown
   const path = window.location.pathname.replace('/', '').split('?')[0];
   const isSinglePost = path && path !== "index.html";
 
@@ -176,7 +176,7 @@ function renderVideos() {
   const end = start + videosPerPage;
   const pageVideos = filteredData.slice(start, end);
 
-  // Back button for single view
+  // Add a "Back" button for single video view
   if (filteredData.length === 1) {
     const backButton = document.createElement("button");
     backButton.textContent = "Back to All Videos";
@@ -195,26 +195,28 @@ function renderVideos() {
     card.className = "video-card";
 
     const tagsArray = Array.isArray(video.tags)
-  ? video.tags
-  : video.tags.split(',').map(t => t.trim());
+      ? video.tags
+      : video.tags.split(',').map(t => t.trim());
 
-card.innerHTML = `
-  <h3>${video.title}</h3>
-  <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-  <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
-  <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-`;
+    card.innerHTML = `
+      <h3>${video.title}</h3>
+      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+      <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
 
-    // Link logic using uniqueId
+    // Click event to go to single post page using uniqueId
     if (!isSinglePost) {
-      const wall = document.createElement("div");
+      const wall = document.createElement("a");
       wall.className = "video-wall";
-      wall.addEventListener("click", () => {
-        const uid = video.uniqueId;
-        history.pushState({ uid }, "", `/${uid}`);
-        filterByUniqueId(uid);
-        pagination.innerHTML = "";
-      });
+      wall.href = `post.html?uId=${video.uniqueId}`;
+      wall.style.display = "block";
+      wall.style.position = "absolute";
+      wall.style.top = "0";
+      wall.style.left = "0";
+      wall.style.width = "100%";
+      wall.style.height = "100%";
+      wall.style.zIndex = "2";
       card.appendChild(wall);
     }
 
@@ -225,10 +227,10 @@ card.innerHTML = `
       videoEl.currentTime = video.start || 1;
     });
 
-    // Ratings still use postId
-    setupRatingSystem(video.postId);
+    setupRatingSystem(video.postId); // Ratings should be using postId
   });
 }
+
 
 
 document.addEventListener("contextmenu", e => e.preventDefault());
@@ -265,3 +267,5 @@ window.addEventListener("popstate", () => {
     renderPagination();
   }
 });
+
+
