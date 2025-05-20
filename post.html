@@ -28,40 +28,47 @@
       <a href="#">About Us</a> |
       <a href="#">Contact</a>
     </p>
-  </footer>  <script type="module">
-    import { insertBannerAd } from './adBanner.js';
+  </footer>  
+  
+  <script type="module">
+  import { setupFooterPopup } from './footer.js';
+document.addEventListener("DOMContentLoaded", () => {
+  setupFooterPopup();
+});
+  import { setupRatingSystem } from './rating.js';
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      insertBannerAd("ad1");
+  const hiddenFile = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
+  const videoContainer = document.getElementById("video-container");
 
-      const segments = window.location.pathname.split("/").filter(Boolean);
-      const uId = segments[segments.length - 1];
-      const container = document.getElementById("video-container");
+  function getUidFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("uId");
+  }
 
-      const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
-      const res = await fetch(file);
-      const data = await res.json();
-      const video = data.find(v => v.uniqueId === uId);
-
-      if (!video) {
-        container.innerHTML = "<p style='color:white;'>Video not found.</p>";
-        return;
-      }
-
-      const tagsArray = Array.isArray(video.tags)
-        ? video.tags
-        : video.tags.split(',').map(t => t.trim());
-
-      container.innerHTML = `
-        <div class="video-card">
-          <h3>${video.title}</h3>
-          <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-          <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
-          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-        </div>
-      `;
-
-      setupRatingSystem(video.postId);
+  fetch(hiddenFile)
+    .then(res => res.json())
+    .then(data => {
+      const uid = getUidFromUrl();
+      const video = data.find(v => v.uniqueId === uid);
+      if (video) renderSingleVideo(video);
+      else videoContainer.innerHTML = "<p>Video not found.</p>";
     });
-  </script></body>
+
+  function renderSingleVideo(video) {
+    const tags = Array.isArray(video.tags)
+      ? video.tags
+      : video.tags.split(',').map(t => t.trim());
+
+    videoContainer.innerHTML = `
+      <h3>${video.title}</h3>
+      <video src="${video.url}" controls autoplay muted playsinline controlsList="nodownload"></video>
+      <div class="tags">${tags.map(t => `<span>#${t}</span>`).join(" ")}</div>
+      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+    `;
+
+    setupRatingSystem(video.postId);
+  }
+  </script>
+
+</body>
 </html>
