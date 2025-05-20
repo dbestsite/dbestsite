@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>D' Best Site - Video Post</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="rating.js"></script>
+  <script type="module" src="adBanner.js"></script>
+</head>
+<body>
+  <header>
+    <h1>D' Best Site</h1>
+    <button onclick="window.location.href='index.html'">Back to All Videos</button>
+  </header>
+
+  <div id="ad1" class="ad-container"></div>
+
+  <main>
+    <div id="video-container" class="video-detail"></div>
+  </main>
+
+  <div id="ad2" class="ad-container"></div>
+
+  <footer>
+    <p>&copy; 2025 D' Best Site. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { setupRatingSystem } from './rating.js';
+
+    const container = document.getElementById("video-container");
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get("uid");
+
+    fetch("videos.json")
+      .then(res => res.json())
+      .then(data => {
+        const video = data.find(v => v.uniqueId === uid);
+        if (!video) {
+          container.innerHTML = "<p>Video not found.</p>";
+          return;
+        }
+
+        const card = document.createElement("div");
+        card.className = "video-card";
+
+        card.innerHTML = `
+          <h2>${video.title}</h2>
+          <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+          <div class="tags">${video.tags.map(t => `<span>#${t}</span>`).join(' ')}</div>
+          <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+        `;
+
+        container.appendChild(card);
+        setupRatingSystem(video.postId);
+      });
+
+    // Disable right-click
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+</body>
+</html>
