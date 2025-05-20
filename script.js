@@ -159,12 +159,12 @@ function renderVideos() {
   ? video.tags
   : video.tags.split(',').map(t => t.trim());
 
-    card.innerHTML = `
-      <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-      <div class="tags">${video.tags.split(',').map(t => `<span>#${t.trim()}</span>`).join(' ')}</div>
-      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-    `;
+card.innerHTML = `
+  <h3>${video.title}</h3>
+  <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
+  <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
+  <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+`;
 
     // Link logic using uniqueId
     if (!isSinglePost) {
