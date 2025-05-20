@@ -256,16 +256,18 @@ function filterByUniqueId(uid) {
 
 // Enable back/forward browser navigation
 window.addEventListener("popstate", () => {
-  const path = window.location.pathname.replace("/", "").split("?")[0];
-  if (path && path !== "index.html") {
-    filterByPostId(path);
-    pagination.innerHTML = "";
+  const params = new URLSearchParams(window.location.search);
+  const uniqueId = params.get("uId");
+
+  if (uniqueId && location.pathname.includes("post.html")) {
+    // In post view: reload to re-render that video
+    location.reload();
   } else {
+    // Back to home or index
     filteredData = videoData;
     currentPage = 1;
     renderVideos();
     renderPagination();
   }
 });
-
 
