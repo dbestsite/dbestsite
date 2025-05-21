@@ -36,7 +36,6 @@ let pageGroupOffset = 0;
 const pagesPerGroup = 5;
 const videosPerPage = 9;
 
-
 let isSinglePost = false;
 const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // Path to your JSON file
 
@@ -44,29 +43,14 @@ fetch(file)
   .then(res => res.json())
   .then(data => {
     videoData = data;
-    const params = new URLSearchParams(window.location.search);
     const path = window.location.pathname.replace('/', '').split('?')[0];
-    const searchQuery = params.get("s");
-    const isPostPage = path && path !== "index.html";
+    isSinglePost = path && path !== "index.html";
 
-    if (isPostPage) {
-      filterByPostId(path);
-      pagination.innerHTML = "";
-    } else if (searchQuery) {
-      document.getElementById("search").value = searchQuery;
-      filteredData = videoData.filter(video => {
-        const q = searchQuery.toLowerCase().trim();
-        return (
-          video.title.toLowerCase().includes(q) ||
-          video.tags.join(',').toLowerCase().includes(q)
-        );
-      });
-      currentPage = 1;
-      renderVideos();
-      renderPagination();
-      initFilters();
+    if (isSinglePost) {
+      filterByPostId(path);  // A function you'll need for single post view
+      pagination.innerHTML = ""; // Clear pagination for single post view
     } else {
-      filteredData = data;
+      filteredData = data; // Filtered videos for home page
       renderVideos();
       renderPagination();
       initFilters();
@@ -286,11 +270,3 @@ window.addEventListener("popstate", () => {
   }
 });
 
-document.getElementById("search").addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    const query = this.value.trim();
-    if (query) {
-      window.location.search = "?s=" + encodeURIComponent(query);
-    }
-  }
-});
