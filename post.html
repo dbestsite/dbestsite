@@ -103,16 +103,9 @@ document.getElementById("back-home").addEventListener("click", () => {
 
 <!-- Fullscreen Ad Overlay -->
 <div id="ad-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000e6; color:white; z-index:9999; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:2em;">
-  <div style="max-width: 600px; width: 90%;">
-    <!-- Replace with your actual ad script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-         data-ad-slot="YYYYYYYYYYYYYYY"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <div style="max-width: 600px; width: 90%; background: #1a1a1a; padding: 1em; border-radius: 8px;">
+    <h2>Sponsored Ad</h2>
+    <p>This is a placeholder for your ad. Replace this with your AdSense code when ready.</p>
   </div>
 
   <button id="close-overlay" disabled
@@ -121,6 +114,7 @@ document.getElementById("back-home").addEventListener("click", () => {
     Please wait 5s...
   </button>
 </div>
+
 <script src="adOverlay.js"></script>
 </body>
 </html>
