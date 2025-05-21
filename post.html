@@ -101,20 +101,62 @@ document.getElementById("back-home").addEventListener("click", () => {
 <script type='text/javascript' src='//swollenbasis.com/72/b5/fe/72b5fe2d3e7255140af2f158bb8293bd.js'></script>
 
 
-<!-- Fullscreen Ad Overlay -->
-<div id="ad-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000e6; color:white; z-index:9999; justify-content:center; align-items:center; flex-direction:column; text-align:center; padding:2em;">
-  <div style="max-width: 600px; width: 90%; background: #1a1a1a; padding: 1em; border-radius: 8px;">
-    <h2>Sponsored Ad</h2>
-    <p>This is a placeholder for your ad. Replace this with your AdSense code when ready.</p>
+  <div id="fullPageAds">
+  <div class="fullpage-popup-content">
+    <div class="fullpage-popup-header">
+      <button id="closeFullPageAd" disabled>X</button>
+    </div>
+    <div class="fullpage-popup-body">
+      <h2>Sponsored Message</h2>
+      <p>This is a placeholder for your AdSense script. Replace this with your actual ad code.</p>
+    </div>
   </div>
-
-  <button id="close-overlay" disabled
-    style="margin-top: 2em; font-size: 1.5em; padding: 0.5em 1em; border: none;
-           background: #b8f1d9; color: #121917; cursor: not-allowed;">
-    Please wait 5s...
-  </button>
 </div>
 
-<script src="adOverlay.js"></script>
+
+<script>
+let fullPageAdSeen = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const backHomeBtn = document.getElementById("back-home");
+  const fullPageAds = document.getElementById("fullPageAds");
+  const closeAdBtn = document.getElementById("closeFullPageAd");
+
+  if (!backHomeBtn || !fullPageAds || !closeAdBtn) return;
+
+  backHomeBtn.addEventListener("click", function (e) {
+    if (!fullPageAdSeen) {
+      e.preventDefault();
+
+      // Show ad overlay instantly
+      fullPageAds.style.display = "flex";
+
+      let seconds = 5;
+      closeAdBtn.textContent = `Wait ${seconds}s`;
+      closeAdBtn.disabled = true;
+      closeAdBtn.style.cursor = "not-allowed";
+
+      const timer = setInterval(() => {
+        seconds--;
+        closeAdBtn.textContent = seconds > 0 ? `Wait ${seconds}s` : "X Close";
+        if (seconds === 0) {
+          clearInterval(timer);
+          closeAdBtn.disabled = false;
+          closeAdBtn.style.cursor = "pointer";
+        }
+      }, 1000);
+
+      closeAdBtn.addEventListener("click", () => {
+        fullPageAds.style.display = "none";
+        fullPageAdSeen = true;
+        window.location.href = "/";
+      });
+    } else {
+      window.location.href = "/";
+    }
+  });
+});
+</script>
+
 </body>
 </html>
