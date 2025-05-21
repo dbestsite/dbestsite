@@ -44,14 +44,29 @@ fetch(file)
   .then(res => res.json())
   .then(data => {
     videoData = data;
+    const params = new URLSearchParams(window.location.search);
     const path = window.location.pathname.replace('/', '').split('?')[0];
-    isSinglePost = path && path !== "index.html";
+    const searchQuery = params.get("s");
+    const isPostPage = path && path !== "index.html";
 
-    if (isSinglePost) {
-      filterByPostId(path);  // A function you'll need for single post view
-      pagination.innerHTML = ""; // Clear pagination for single post view
+    if (isPostPage) {
+      filterByPostId(path);
+      pagination.innerHTML = "";
+    } else if (searchQuery) {
+      document.getElementById("search").value = searchQuery;
+      filteredData = videoData.filter(video => {
+        const q = searchQuery.toLowerCase().trim();
+        return (
+          video.title.toLowerCase().includes(q) ||
+          video.tags.join(',').toLowerCase().includes(q)
+        );
+      });
+      currentPage = 1;
+      renderVideos();
+      renderPagination();
+      initFilters();
     } else {
-      filteredData = data; // Filtered videos for home page
+      filteredData = data;
       renderVideos();
       renderPagination();
       initFilters();
@@ -271,3 +286,11 @@ window.addEventListener("popstate", () => {
   }
 });
 
+document.getElementById("search").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    const query = this.value.trim();
+    if (query) {
+      window.location.search = "?s=" + encodeURIComponent(query);
+    }
+  }
+});
