@@ -106,8 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
       <button id="closeFullPageAd" disabled>X</button>
     </div>
     <div class="fullpage-popup-body">
-      <h2>Sponsored Message</h2>
-      <p>This is a placeholder for your AdSense script. Replace this with your actual ad code.</p>
+      <h2>Advertisement</h2>
+
+      <div id="popup-ad-container" style="display: flex; justify-content: center; align-items: center; height: 250px;">
+        <script type="text/javascript">
+          atOptions = {
+            'key': '5a944efcf8c1ae5899ea4d3ccf62e6a1',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+          };
+        </script>
+        <script type="text/javascript" src="//swollenbasis.com/5a944efcf8c1ae5899ea4d3ccf62e6a1/invoke.js"></script>
+      </div>
+
     </div>
   </div>
 </div>
