@@ -8,31 +8,34 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!backHomeBtn || !overlay || !closeBtn) return;
 
   backHomeBtn.addEventListener("click", function (e) {
-    if (!adShown) {
-      e.preventDefault();
-      let seconds = 5;
-      overlay.style.display = "flex";
-      closeBtn.textContent = `Please wait ${seconds}s...`;
-      closeBtn.disabled = true;
-      closeBtn.style.cursor = "not-allowed";
+  if (!adShown) {
+    e.preventDefault();
 
-      const interval = setInterval(() => {
-        seconds--;
-        closeBtn.textContent = seconds > 0 ? `Please wait ${seconds}s...` : "X Close";
-        if (seconds === 0) {
-          clearInterval(interval);
-          closeBtn.disabled = false;
-          closeBtn.style.cursor = "pointer";
-        }
-      }, 1000);
+    // Show overlay immediately
+    overlay.style.display = "flex";
 
-      closeBtn.addEventListener("click", () => {
-        overlay.style.display = "none";
-        adShown = true;
-        window.location.href = "/";
-      });
-    } else {
+    let seconds = 5;
+    closeBtn.textContent = `Please wait ${seconds}s...`;
+    closeBtn.disabled = true;
+    closeBtn.style.cursor = "not-allowed";
+
+    const interval = setInterval(() => {
+      seconds--;
+      closeBtn.textContent = seconds > 0 ? `Please wait ${seconds}s...` : "X Close";
+      if (seconds === 0) {
+        clearInterval(interval);
+        closeBtn.disabled = false;
+        closeBtn.style.cursor = "pointer";
+      }
+    }, 1000);
+
+    closeBtn.addEventListener("click", () => {
+      overlay.style.display = "none";
+      adShown = true;
       window.location.href = "/";
-    }
-  });
+    });
+  } else {
+    window.location.href = "/";
+  }
+});
 });
