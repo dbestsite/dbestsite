@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
   import { setupRatingSystem } from './rating.js';
 
-  const hiddenFile = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
+  const item = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
   const videoContainer = document.getElementById("video-container");
 
   function getUidFromUrl() {
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return params.get("uId");
   }
 
-  fetch(hiddenFile)
+  fetch(item)
     .then(res => res.json())
     .then(data => {
       const uid = getUidFromUrl();
