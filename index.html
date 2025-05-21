@@ -73,6 +73,17 @@
     });
   });
 </script>
+
+<script>
+document.getElementById("search").addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    const query = this.value.trim();
+    if (query) {
+      window.location.href = "/s+" + encodeURIComponent(query);
+    }
+  }
+});
+</script>
   
 <script type="module" src="adBanner.js"></script>
 <script type="module" src="pcAds.js"></script>
