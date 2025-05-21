@@ -228,3 +228,80 @@ video {
   z-index: 10;
   cursor: pointer;
 }
+
+#fullPageAds {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+#fullPageAds .fullpage-popup-content {
+  background: #1a1a1a;
+  color: #fff;
+  max-width: 600px;
+  width: 90%;
+  padding: 2em;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 90vh;
+  position: relative;
+  text-align: center;
+}
+
+#fullPageAds .fullpage-popup-header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#closeFullPageAd {
+  background-color: #b8f1d9;
+  color: #121917;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
+#fullPageAds {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+#fullPageAds .fullpage-popup-content {
+  background: #1a1a1a;
+  color: #fff;
+  max-width: 600px;
+  width: 90%;
+  padding: 2em;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: 90vh;
+  position: relative;
+  text-align: center;
+}
+
+#fullPageAds .fullpage-popup-header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+#closeFullPageAd {
+  background-color: #b8f1d9;
+  color: #121917;
+  border: none;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: not-allowed;
+}
