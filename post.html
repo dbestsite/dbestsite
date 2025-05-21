@@ -101,7 +101,7 @@ document.getElementById("back-home").addEventListener("click", () => {
 <script type='text/javascript' src='//swollenbasis.com/72/b5/fe/72b5fe2d3e7255140af2f158bb8293bd.js'></script>
 
 
-  <div id="fullPageAds">
+<div id="fullPageAds">
   <div class="fullpage-popup-content">
     <div class="fullpage-popup-header">
       <button id="closeFullPageAd" disabled>X</button>
@@ -126,10 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   backHomeBtn.addEventListener("click", function (e) {
     if (!fullPageAdSeen) {
-      e.preventDefault();
-
-      // Show ad overlay instantly
-      fullPageAds.style.display = "flex";
+      e.preventDefault(); // Stop immediate redirect
+      fullPageAds.style.display = "flex"; // Show the ad overlay
 
       let seconds = 5;
       closeAdBtn.textContent = `Wait ${seconds}s`;
@@ -149,14 +147,16 @@ document.addEventListener("DOMContentLoaded", () => {
       closeAdBtn.addEventListener("click", () => {
         fullPageAds.style.display = "none";
         fullPageAdSeen = true;
-        window.location.href = "/";
-      });
+        window.location.href = "index.html";
+      }, { once: true }); // Only attach this once
     } else {
-      window.location.href = "/";
+      // Already seen ad, just redirect normally
+      window.location.href = "index.html";
     }
   });
 });
 </script>
+
 
 </body>
 </html>
