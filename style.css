@@ -311,8 +311,9 @@ video {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    background: rgba(0, 0, 0, 0.8);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.85);
     padding: 20px;
     border-radius: 10px;
     color: white;
@@ -322,9 +323,8 @@ video {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: auto;
+    z-index: 9999;
 }
-
 #age-gate button {
     margin: 10px;
     padding: 10px;
@@ -348,4 +348,15 @@ video {
     margin-top: 10px;
 }
 
+#age-gate-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.6); /* fallback for browsers without blur support */
+    z-index: 9998;
+    display: none;
+}
 
