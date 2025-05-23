@@ -22,6 +22,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const totalViewsRef = firebase.database().ref("siteStats/totalViews");
+
+  totalViewsRef.transaction((current) => {
+    return (current || 0) + 1;
+  });
 
 const videoContainer = document.getElementById("video-container");
 const searchInput = document.getElementById("search");
