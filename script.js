@@ -22,6 +22,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+import { runTransaction, ref as dbRef } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+const totalViewsRef = dbRef(db, "siteStats/totalViews");
+runTransaction(totalViewsRef, (current) => {
+  return (current || 0) + 1;
+});
 
 const videoContainer = document.getElementById("video-container");
 const searchInput = document.getElementById("search");
@@ -270,3 +275,7 @@ window.addEventListener("popstate", () => {
   }
 });
 
+onValue(totalViewsRef, (snapshot) => {
+  const count = snapshot.val();
+  document.getElementById("visitor-count").textContent = count ?? 0;
+});
