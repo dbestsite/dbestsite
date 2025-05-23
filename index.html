@@ -86,41 +86,48 @@
   });
 </script>
 
+    <div id="age-gate-overlay"></div>
+
   <div id="age-gate" style="justify-content: center; align-items: center; text-align: center;">
-    <h2>Age Verification</h2>
-    <p>You must be at least 18 years old to enter this site.</p>
-    <label>
-        <input type="checkbox" id="remember-choice">
-        Remember my answer for 24 hours
-    </label>
-    <br>
-    <button onclick="verifyAge(true)">I am 18 or older</button>
-    <button onclick="verifyAge(false)">I am under 18</button>
-</div>
+  <h2>Are you 18 or older?</h2>
+  <button onclick="verifyAge(true)">Yes</button>
+  <button onclick="verifyAge(false)">No</button>
+  <label>
+    <input type="checkbox" id="remember-choice"> Remember me for 24 hours
+  </label>
+  </div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const ageGate = document.getElementById("age-gate");
+    const ageOverlay = document.getElementById("age-gate-overlay");
     const lastVerified = localStorage.getItem("lastVerified");
 
-    // Check if the user verified their age and if the 24 hours have passed
-    if (lastVerified && Date.now() - parseInt(lastVerified) < 86400000) {
-        ageGate.style.display = "none"; // Hide the form
-        document.body.style.overflow = "auto"; // Allow scrolling
-    } else {
-        ageGate.style.display = "block"; // Show the form
-        document.body.style.overflow = "hidden"; // Prevent scrolling
+    function showGate() {
+        ageGate.style.display = "flex";
+        ageOverlay.style.display = "block";
+        document.body.style.overflow = "hidden";
     }
 
-    // Age verification function
+    function hideGate() {
+        ageGate.style.display = "none";
+        ageOverlay.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    if (lastVerified && Date.now() - parseInt(lastVerified) < 86400000) {
+        hideGate();
+    } else {
+        showGate();
+    }
+
     window.verifyAge = function (isOldEnough) {
         if (isOldEnough) {
             if (document.getElementById("remember-choice").checked) {
-                localStorage.setItem("lastVerified", Date.now()); // Store answer for 24 hours
+                localStorage.setItem("lastVerified", Date.now());
             } else {
-                localStorage.removeItem("lastVerified"); // Ask again after closing the site
+                localStorage.removeItem("lastVerified");
             }
-            ageGate.style.display = "none";
-            document.body.style.overflow = "auto"; // Restore scrolling
+            hideGate();
         } else {
             alert("Sorry, you are not old enough to access this site.");
             window.location.href = "https://www.google.com";
