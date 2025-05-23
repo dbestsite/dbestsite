@@ -275,7 +275,13 @@ window.addEventListener("popstate", () => {
   }
 });
 
+function formatCount(num) {
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+  return num;
+}
+
 onValue(totalViewsRef, (snapshot) => {
-  const count = snapshot.val();
-  document.getElementById("visitor-count").textContent = count ?? 0;
+  const count = snapshot.val() ?? 0;
+  document.getElementById("visitor-count").textContent = formatCount(count);
 });
