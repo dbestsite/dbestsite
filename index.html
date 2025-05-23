@@ -83,6 +83,49 @@
   });
 </script>
 
+  <div id="age-gate" style="justify-content: center; align-items: center; text-align: center;">
+    <h2>Age Verification</h2>
+    <p>You must be at least 18 years old to enter this site.</p>
+    <label>
+        <input type="checkbox" id="remember-choice">
+        Remember my answer for 24 hours
+    </label>
+    <br>
+    <button onclick="verifyAge(true)">I am 18 or older</button>
+    <button onclick="verifyAge(false)">I am under 18</button>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ageGate = document.getElementById("age-gate");
+    const lastVerified = localStorage.getItem("lastVerified");
+
+    // Check if the user verified their age and if the 24 hours have passed
+    if (lastVerified && Date.now() - parseInt(lastVerified) < 86400000) {
+        ageGate.style.display = "none"; // Hide the form
+        document.body.style.overflow = "auto"; // Allow scrolling
+    } else {
+        ageGate.style.display = "block"; // Show the form
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+    }
+
+    // Age verification function
+    window.verifyAge = function (isOldEnough) {
+        if (isOldEnough) {
+            if (document.getElementById("remember-choice").checked) {
+                localStorage.setItem("lastVerified", Date.now()); // Store answer for 24 hours
+            } else {
+                localStorage.removeItem("lastVerified"); // Ask again after closing the site
+            }
+            ageGate.style.display = "none";
+            document.body.style.overflow = "auto"; // Restore scrolling
+        } else {
+            alert("Sorry, you are not old enough to access this site.");
+            window.location.href = "https://www.google.com";
+        }
+    };
+});
+
+</script>
 
 <script type="module" src="adBanner.js"></script>
 <script type="module" src="pcAds.js"></script>
