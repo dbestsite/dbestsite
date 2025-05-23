@@ -275,13 +275,18 @@ window.addEventListener("popstate", () => {
   }
 });
 
-function formatCount(num) {
+function formatSimplified(num) {
   if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
   if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
   return num;
 }
 
+function formatFull(num) {
+  return num.toLocaleString();
+}
+
 onValue(totalViewsRef, (snapshot) => {
   const count = snapshot.val() ?? 0;
-  document.getElementById("visitor-count").textContent = formatCount(count);
+  document.getElementById("visitor-count-k").textContent = formatSimplified(count);
+  document.getElementById("visitor-count-full").textContent = formatFull(count);
 });
