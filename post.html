@@ -165,5 +165,12 @@
       </div>
     </div>
   </div>
+  <script type="module">
+  import { setupComments } from './commentSystem.js';
+  document.addEventListener("DOMContentLoaded", () => {
+    const uid = new URLSearchParams(location.search).get("uId");
+    if (uid) setupComments(uid);
+  });
+</script>
 </body>
 </html>
