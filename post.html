@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     videoContainer.innerHTML = `
       <h3>${video.title}</h3>
-      <video src="${video.url}" controls autoplay muted playsinline controlsList="nodownload"></video>
+      <video src="${video.url}" controls muted playsinline controlsList="nodownload"></video>
       <div class="tags">${tags.map(t => `<span>#${t}</span>`).join(" ")}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
@@ -161,13 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
       fullPageAds.style.display = "flex"; // Show the ad overlay
 
       let seconds = 5;
-      closeAdBtn.textContent = `Wait ${seconds}s`;
+      closeAdBtn.textContent = `${seconds}s`;
       closeAdBtn.disabled = true;
       closeAdBtn.style.cursor = "not-allowed";
 
       const timer = setInterval(() => {
         seconds--;
-        closeAdBtn.textContent = seconds > 0 ? `Wait ${seconds}s` : "X Close";
+        closeAdBtn.textContent = seconds > 0 ? `${seconds}s` : "X";
         if (seconds === 0) {
           clearInterval(timer);
           closeAdBtn.disabled = false;
