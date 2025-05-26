@@ -150,12 +150,13 @@ let fullPageAdSeen = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   const backHomeBtn = document.getElementById("back-home");
+  const siteTitle = document.getElementById("site-title");
   const fullPageAds = document.getElementById("fullPageAds");
   const closeAdBtn = document.getElementById("closeFullPageAd");
 
-  if (!backHomeBtn || !fullPageAds || !closeAdBtn) return;
+  if (!fullPageAds || !closeAdBtn) return;
 
-  backHomeBtn.addEventListener("click", function (e) {
+  function handleHomeRedirect(e) {
     if (!fullPageAdSeen) {
       e.preventDefault(); // Stop immediate redirect
       fullPageAds.style.display = "flex"; // Show the ad overlay
@@ -179,14 +180,17 @@ document.addEventListener("DOMContentLoaded", () => {
         fullPageAds.style.display = "none";
         fullPageAdSeen = true;
         window.location.href = "index.html";
-      }, { once: true }); // Only attach this once
+      }, { once: true });
     } else {
-      // Already seen ad, just redirect normally
       window.location.href = "index.html";
     }
-  });
+  }
+
+  if (backHomeBtn) backHomeBtn.addEventListener("click", handleHomeRedirect);
+  if (siteTitle) siteTitle.addEventListener("click", handleHomeRedirect);
 });
 </script>
+
 
 
 </body>
