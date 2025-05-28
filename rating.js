@@ -46,29 +46,20 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
     star.style.marginRight = '3px';
 
     star.addEventListener('click', () => {
-      if (currentRating === i) return; // prevent clicking same star
-
       const ratingRef = ref(db, `ratings/${postId}`);
 
       runTransaction(ratingRef, current => {
         if (current === null) {
+          // initialize with your initial votes and sum + this vote
           return {
             votes: initialVotes + 1,
             sum: initialSum + i
           };
         }
-
-        const newVotes = currentRating ? current.votes : current.votes + 1;
-        const newSum = current.sum - currentRating + i;
-
         return {
-          votes: newVotes,
-          sum: newSum
+          votes: current.votes + 1,
+          sum: current.sum + i
         };
-      }).then(() => {
-        currentRating = i;
-        localStorage.setItem(userRatingKey, i);
-        updateStars(currentRating);
       }).catch(console.error);
     });
 
@@ -103,15 +94,4 @@ get(ratingRef).then(snapshot => {
       infoDiv.textContent = "No ratings yet";
     }
   });
-
-  function updateStars(rating) {
-    stars.forEach((star, idx) => {
-      star.textContent = idx < rating ? '★' : '☆';
-    });
-  }
-
-  // Apply stored rating visually on load
-  if (currentRating > 0) {
-    updateStars(currentRating);
-  }
 }
