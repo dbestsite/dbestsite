@@ -36,7 +36,15 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
 
   const stars = [];
 
-  // Create 5 stars
+  const userKey = `rating-${postId}`;
+  let userRating = parseInt(localStorage.getItem(userKey)) || 0;
+
+  function updateStarsVisual(rating) {
+    stars.forEach((star, idx) => {
+      star.textContent = idx < rating ? '★' : '☆';
+    });
+  }
+
   for (let i = 1; i <= 5; i++) {
     const star = document.createElement('span');
     star.textContent = '☆';
@@ -46,20 +54,34 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
     star.style.marginRight = '3px';
 
     star.addEventListener('click', () => {
-      const ratingRef = ref(db, `ratings/${postId}`);
+      if (userRating === i) return; // Prevent clicking the same star
 
+      const ratingRef = ref(db, `ratings/${postId}`);
       runTransaction(ratingRef, current => {
         if (current === null) {
-          // initialize with your initial votes and sum + this vote
           return {
             votes: initialVotes + 1,
             sum: initialSum + i
           };
         }
-        return {
-          votes: current.votes + 1,
-          sum: current.sum + i
-        };
+
+        let votes = current.votes;
+        let sum = current.sum;
+
+        // If this is the first time, add new vote
+        if (!userRating) {
+          votes += 1;
+          sum += i;
+        } else {
+          // If already rated, just adjust sum
+          sum = sum - userRating + i;
+        }
+
+        return { votes, sum };
+      }).then(() => {
+        userRating = i;
+        localStorage.setItem(userKey, i);
+        updateStarsVisual(userRating);
       }).catch(console.error);
     });
 
@@ -69,29 +91,21 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
 
   const ratingRef = ref(db, `ratings/${postId}`);
 
-  // Initialize Firebase data if not exists
-get(ratingRef).then(snapshot => {
+  get(ratingRef).then(snapshot => {
     if (!snapshot.exists() && initialVotes && initialSum) {
       set(ratingRef, { votes: initialVotes, sum: initialSum });
     }
   });
 
-  // Listen for changes to update UI
   onValue(ratingRef, (snapshot) => {
     const data = snapshot.val();
-
     if (data && data.votes && data.sum) {
       const avg = data.sum / data.votes;
-      const rounded = Math.round(avg);
-      stars.forEach((star, idx) => {
-        star.textContent = idx < rounded ? '★' : '☆';
-      });
-
       infoDiv.textContent = `Average: ${avg.toFixed(1)} ★ (${data.votes} vote${data.votes > 1 ? 's' : ''})`;
     } else {
-      // no data yet
-      stars.forEach(s => s.textContent = '☆');
       infoDiv.textContent = "No ratings yet";
     }
+
+    updateStarsVisual(userRating); // show user's own rating on UI
   });
 }
