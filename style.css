@@ -377,3 +377,19 @@ video {
   #comment-form button {
     padding: 0.5em 1em;
   }
+
+  .like-bar {
+    margin-top: 0.5em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .like-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  .like-count {
+    font-weight: bold;
+  }
