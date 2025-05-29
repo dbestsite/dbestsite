@@ -76,105 +76,46 @@
 </script>
   
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, push, set, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { setupFooterPopup } from './footer.js';
+document.addEventListener("DOMContentLoaded", () => {
+  setupFooterPopup();
+});
+  import { setupRatingSystem } from './rating.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCccRM-QZ45NGqSw7qVg1RX3QYUzvKWkow",
-  authDomain: "rate-my-vid.firebaseapp.com",
-  projectId: "rate-my-vid",
-  storageBucket: "rate-my-vid.appspot.com",
-  messagingSenderId: "72446767608",
-  appId: "1:72446767608:web:b0584f8cdeba57cf19e8a7",
-  measurementId: "G-11WZ6W3X0T",
-  databaseURL: "https://rate-my-vid-default-rtdb.asia-southeast1.firebasedatabase.app"
-};
+  const item = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // v
+  const videoContainer = document.getElementById("video-container");
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+  function getUidFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("uId");
+  }
 
-const urlParams = new URLSearchParams(window.location.search);
-const uId = urlParams.get("uId");
+  fetch(item)
+    .then(res => res.json())
+    .then(data => {
+      const uid = getUidFromUrl();
+      const video = data.find(v => v.uniqueId === uid);
+      if (video) renderSingleVideo(video);
+      else videoContainer.innerHTML = "<p>Video not found.</p>";
+    });
 
-fetch("videos.json")
-  .then(res => res.json())
-  .then(data => {
-    const video = data.find(v => v.postId === uId);
-    if (!video) return;
+  function renderSingleVideo(video) {
+    const tags = Array.isArray(video.tags)
+      ? video.tags
+      : video.tags.split(',').map(t => t.trim());
 
-    const videoContainer = document.getElementById("video-container");
-    const tags = video.tags.split(",").map(t => t.trim());
-
-    // Add the comment toggle button
     videoContainer.innerHTML = `
       <h3>${video.title}</h3>
       <video src="${video.url}" controls muted playsinline controlsList="nodownload"></video>
       <div class="tags">${tags.map(t => `<span>#${t}</span>`).join(" ")}</div>
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
-      <button id="comment-toggle" style="margin: 20px; padding: 10px 20px; font-size: 1em;">💬 Comments</button>
     `;
 
-    // Scroll to comment section when button is clicked
-    document.getElementById("comment-toggle").addEventListener("click", () => {
-      const section = document.getElementById("comment-section");
-      if (section) section.scrollIntoView({ behavior: "smooth" });
-    });
-
-    renderRating(video.postId);
-    renderCommentSection(video.postId);
-  });
-
-function renderRating(postId) {
-  const ratingBox = document.getElementById(`rating-${postId}`);
-  const videoRef = ref(db, `videos/${postId}`);
-  onValue(videoRef, snapshot => {
-    const data = snapshot.val();
-    const votes = data?.votes ?? 0;
-    const sum = data?.sum ?? 0;
-    const avg = votes ? (sum / votes).toFixed(1) : "No ratings yet";
-    ratingBox.textContent = `⭐ ${avg} (${votes} ratings)`;
-  });
-}
-
-function renderCommentSection(postId) {
-  const commentSection = document.getElementById("comment-section");
-  commentSection.innerHTML = `
-    <h2>Comments</h2>
-    <div id="comments-list"></div>
-    <div>
-      <textarea id="comment-text" placeholder="Write a comment..."></textarea>
-      <button id="submit-comment">Submit</button>
-    </div>
-  `;
-
-  let userName = localStorage.getItem("userName");
-  if (!userName) {
-    userName = prompt("Enter your name:");
-    if (userName) localStorage.setItem("userName", userName);
+    setupRatingSystem(video.postId);
   }
 
-  const commentRef = ref(db, `comments/${postId}`);
-  onValue(commentRef, snapshot => {
-    const data = snapshot.val();
-    const commentsList = document.getElementById("comments-list");
-    commentsList.innerHTML = "";
-    for (const id in data) {
-      const comment = data[id];
-      const div = document.createElement("div");
-      div.innerHTML = `<strong>${comment.name}:</strong> ${comment.text}`;
-      commentsList.appendChild(div);
-    }
-  });
-
-  document.getElementById("submit-comment").addEventListener("click", () => {
-    const text = document.getElementById("comment-text").value.trim();
-    if (!text) return;
-    const newCommentRef = push(commentRef);
-    set(newCommentRef, { name: userName, text });
-    document.getElementById("comment-text").value = "";
-  });
-}
-</script>
+;
+  </script>
 <script type='text/javascript' src='//swollenbasis.com/72/b5/fe/72b5fe2d3e7255140af2f158bb8293bd.js'></script>
 
 
@@ -260,7 +201,112 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-  
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const db = firebase.database(); // Assumes Firebase is already initialized
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get("uId");
+    if (!postId) return;
+
+    // Assign persistent anonymous user ID
+    if (!localStorage.getItem("anonUserId")) {
+      const randomId = Math.floor(10000 + Math.random() * 90000);
+      localStorage.setItem("anonUserId", "Anonymous User " + randomId);
+    }
+    const anonName = localStorage.getItem("anonUserId");
+
+    // Mount UI
+    const container = document.getElementById("comment-section") || createCommentContainer();
+    container.innerHTML = `
+      <h3 id="comment-title">Comments (0)</h3>
+      <div id="comment-list"></div>
+      <form id="comment-form">
+        <textarea id="comment-text" placeholder="Write a comment..." required></textarea>
+        <button type="submit">Post as ${anonName}</button>
+      </form>
+    `;
+
+    // Submit comment
+    document.getElementById("comment-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const text = document.getElementById("comment-text").value.trim();
+      if (!text) return;
+
+      const commentData = {
+        name: anonName,
+        text,
+        timestamp: Date.now()
+      };
+
+      db.ref("comments/" + postId).push(commentData);
+      document.getElementById("comment-form").reset();
+    });
+
+    // Load comments and listen for updates
+    db.ref("comments/" + postId).on("value", function (snapshot) {
+      const comments = snapshot.val();
+      const list = document.getElementById("comment-list");
+      list.innerHTML = "";
+
+      let count = 0;
+      for (const [commentId, comment] of Object.entries(comments || {})) {
+        count++;
+
+        const commentEl = document.createElement("div");
+        commentEl.className = "comment";
+        commentEl.innerHTML = `
+          <strong>${comment.name}</strong>
+          <p>${comment.text}</p>
+          <div class="like-bar" data-id="${commentId}">
+            <button class="like-btn">👍</button>
+            <span class="like-count">0</span>
+          </div>
+        `;
+        list.appendChild(commentEl);
+
+        const likeBtn = commentEl.querySelector(".like-btn");
+        const likeCountEl = commentEl.querySelector(".like-count");
+
+        // Load likes
+        const likeRef = db.ref(`likes/${postId}/${commentId}`);
+        likeRef.on("value", function (snap) {
+          const likes = snap.val() || {};
+          const totalLikes = Object.keys(likes).length;
+          likeCountEl.textContent = totalLikes;
+        });
+
+        // Handle like button
+        likeBtn.addEventListener("click", function () {
+          const likedKey = `liked_${postId}_${commentId}`;
+          const alreadyLiked = localStorage.getItem(likedKey);
+
+          const likeRef = db.ref(`likes/${postId}/${commentId}/${anonName.replace(/\s+/g, "_")}`);
+
+          if (!alreadyLiked) {
+            likeRef.set(true); // Add like
+            localStorage.setItem(likedKey, "true");
+          } else {
+            likeRef.remove(); // Unlike
+            localStorage.removeItem(likedKey);
+          }
+        });
+      }
+
+      // Update count
+      document.getElementById("comment-title").textContent = `Comments (${count})`;
+    });
+
+    // Fallback if comment container is not in HTML
+    function createCommentContainer() {
+      const div = document.createElement("div");
+      div.id = "comment-section";
+      document.body.appendChild(div);
+      return div;
+    }
+  });
+</script>
+
 
 </body>
 </html>
