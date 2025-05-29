@@ -360,3 +360,20 @@ video {
     display: none;
 }
 
+  #comment-section {
+    padding: 1em;
+    border-top: 1px solid #ccc;
+  }
+  .comment {
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border-bottom: 1px solid #eee;
+  }
+  #comment-form textarea {
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  #comment-form button {
+    padding: 0.5em 1em;
+  }
