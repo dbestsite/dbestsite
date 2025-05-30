@@ -114,7 +114,7 @@ else videoContainer.innerHTML = "<p>Video not found.</p>";
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0); setupCommentSection(video.postId);
+    setupRatingSystem(video.postId, video.votes, video.sum); setupCommentSection(video.postId);
 
   }
 
