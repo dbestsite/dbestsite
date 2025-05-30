@@ -202,32 +202,48 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script type="module">
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 
-// Get uId from URL
-const uId = new URLSearchParams(location.search).get("uId");
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDWqWfKWRY7nxZTIXxgV1j_baHY0m8F_Ng",
+  authDomain: "dbest-rating.firebaseapp.com",
+  databaseURL: "https://dbest-rating-default-rtdb.firebaseio.com",
+  projectId: "dbest-rating",
+  storageBucket: "dbest-rating.appspot.com",
+  messagingSenderId: "951177510571",
+  appId: "1:951177510571:web:8e5917a62e3443e1dbc1ee",
+  measurementId: "G-9DSK5WTW62"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Get post uId from URL
+const uId = new URLSearchParams(window.location.search).get("uId");
 if (!uId || !/^[a-zA-Z0-9]{12}$/.test(uId)) {
-  console.error("Invalid or missing uId.");
+  console.error("Invalid or missing uId in URL.");
   throw new Error("Invalid post ID");
 }
 
-// Assign anonymous ID per browser
+// Generate or retrieve anonymous ID
 let anonId = localStorage.getItem("anonId");
 if (!anonId) {
   anonId = "anon-" + Math.random().toString(36).substring(2, 10);
   localStorage.setItem("anonId", anonId);
 }
 
-// Target container
+// Render comment UI
 const commentSection = document.getElementById("comment-section");
 if (!commentSection) {
-  console.error("Missing <div id='comment-section'>");
-  throw new Error("No comment container");
+  console.error("Missing #comment-section element.");
+  throw new Error("Missing comment section container");
 }
 
-// Inject basic structure
 commentSection.innerHTML = `
-  <h3 style="margin-bottom: 0.5em;">Comments</h3>
+  <h3>Comments</h3>
   <textarea id="comment-input" placeholder="Write a comment..." style="width:100%; height:60px; margin-bottom:0.5em;"></textarea>
   <br>
   <button id="post-comment" style="margin-bottom:1em;">Post</button>
@@ -235,8 +251,6 @@ commentSection.innerHTML = `
   <button id="load-more" style="display:none; margin-top:1em;">Show more</button>
 `;
 
-// Setup elements
-const db = getDatabase();
 const commentsRef = ref(db, "comments/" + uId);
 const input = document.getElementById("comment-input");
 const postBtn = document.getElementById("post-comment");
@@ -246,12 +260,12 @@ const loadMoreBtn = document.getElementById("load-more");
 let allComments = [];
 let visibleCount = 0;
 
-// Post comment
-postBtn.onclick = () => {
+// Submit comment
+postBtn.onclick = async () => {
   const text = input.value.trim();
   if (!text) return;
 
-  push(commentsRef, {
+  await push(commentsRef, {
     user: anonId,
     text,
     timestamp: Date.now()
@@ -260,7 +274,7 @@ postBtn.onclick = () => {
   input.value = "";
 };
 
-// Load comments
+// Listen for new comments
 onValue(commentsRef, (snapshot) => {
   const data = snapshot.val() || {};
   allComments = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
@@ -269,7 +283,7 @@ onValue(commentsRef, (snapshot) => {
   showMoreComments();
 });
 
-// Show more handler
+// Load next batch
 function showMoreComments() {
   const next = allComments.slice(visibleCount, visibleCount + (visibleCount === 0 ? 7 : 15));
   next.forEach(comment => {
@@ -285,6 +299,7 @@ function showMoreComments() {
 
 loadMoreBtn.onclick = showMoreComments;
 </script>
+
 
 
 </body>
