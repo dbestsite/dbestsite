@@ -39,7 +39,7 @@ let selectedTags = new Set();
 let currentPage = 1;
 let pageGroupOffset = 0;
 const pagesPerGroup = 5;
-const videosPerPage = 9;
+const videosPerPage = 15;
 
 let isSinglePost = false;
 const file = "\x76\x69\x64\x65\x6F\x73\x2E\x6A\x73\x6F\x6E"; // Path to your JSON file
