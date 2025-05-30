@@ -92,14 +92,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   fetch(item)
-    .then(res => res.json())
-    .then(data => {
-      const uid = getUidFromUrl();
-      const video = data.find(v => v.uniqueId === uid);
-      if (video) renderSingleVideo(video);
-      else videoContainer.innerHTML = "<p>Video not found.</p>";
-      
+  .then(res => res.json())
+  .then(data => {
+    const uid = getUidFromUrl(); // Assumes your URL uses ?uId=xxxx
+    const video = data.find(v => v.uniqueId === uid);
+    if (!video) {
+      videoContainer.innerHTML = "<p>Video not found.</p>";
+      return;
+    }
+
+    // Reference to Firebase rating data
+    const ratingRef = firebase.database().ref('ratings/' + uid);
+
+    ratingRef.once('value').then(snapshot => {
+      const firebaseData = snapshot.val();
+
+      if (firebaseData) {
+        // If Firebase already has data, use that
+        video.votes = firebaseData.votes;
+        video.sum = firebaseData.sum;
+      } else {
+        // If no data yet, initialize Firebase with JSON values
+        const initialVotes = video.votes || 0;
+        const initialSum = video.sum || 0;
+        firebase.database().ref('ratings/' + uid).set({
+          votes: initialVotes,
+          sum: initialSum
+        });
+      }
+
+      // Now render the video (and call setupRatingSystem)
+      renderSingleVideo(video);
     });
+  });
 
   function renderSingleVideo(video) {
     const tags = Array.isArray(video.tags)
@@ -113,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    setupRatingSystem(video.postId); setupCommentSection(video.postId);
+    setupRatingSystem(video.postId, video.votes || 0, video.sum || 0); setupCommentSection(video.postId);
 
   }
 
