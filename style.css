@@ -361,35 +361,60 @@ video {
 }
 
   #comment-section {
-    padding: 1em;
-    border-top: 1px solid #ccc;
-  }
-  .comment {
-    margin-bottom: 1em;
-    padding: 0.5em;
-    border-bottom: 1px solid #eee;
-  }
-  #comment-form textarea {
-    width: 100%;
-    padding: 0.5em;
-    margin-bottom: 0.5em;
-  }
-  #comment-form button {
-    padding: 0.5em 1em;
-  }
-
-  .like-bar {
-    margin-top: 0.5em;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-  }
-  .like-btn {
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-  }
-  .like-count {
-    font-weight: bold;
-  }
+        max-width: 700px;
+        margin: 2em auto;
+        background: #1e1e1e;
+        color: #fff;
+        padding: 1em;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      }
+      #comment-section h3 {
+        margin-bottom: 0.5em;
+        font-size: 1.4em;
+        border-bottom: 1px solid #444;
+        padding-bottom: 0.3em;
+      }
+      #comment-input {
+        width: 100%;
+        padding: 0.75em;
+        font-size: 1em;
+        border-radius: 6px;
+        border: 1px solid #444;
+        background: #2a2a2a;
+        color: #fff;
+        resize: none;
+        margin-bottom: 0.5em;
+      }
+      #submit-comment {
+        background: #00c853;
+        border: none;
+        color: #fff;
+        padding: 0.5em 1em;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      #submit-comment:hover {
+        background: #00b44a;
+      }
+      #comments-container > div {
+        padding: 0.75em 0;
+        border-bottom: 1px solid #333;
+      }
+      #comments-container > div:last-child {
+        border-bottom: none;
+      }
+      #load-more {
+        display: block;
+        background: #444;
+        color: #ccc;
+        border: none;
+        padding: 0.5em;
+        margin: 1em auto 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #load-more:hover {
+        background: #555;
+      }
