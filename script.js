@@ -205,8 +205,7 @@ function renderVideos() {
     card.innerHTML = `
       <h3>${video.title}</h3>
       <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-      <div class="tags">${tagsArray.map(t => `<span>#${t}</span>`).join(' ')}</div>
-      <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
+      
     `;
 
     // Click event to go to single post page using uniqueId
