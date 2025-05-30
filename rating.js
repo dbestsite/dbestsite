@@ -92,7 +92,7 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
   const ratingRef = ref(db, `ratings/${postId}`);
 
   get(ratingRef).then(snapshot => {
-    if (!snapshot.exists() && initialVotes && initialSum) {
+    if (!snapshot.exists()) {
       set(ratingRef, { votes: initialVotes, sum: initialSum });
     }
   });
@@ -103,7 +103,7 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
       const avg = data.sum / data.votes;
       infoDiv.textContent = `Average: ${avg.toFixed(1)} ★ (${data.votes} vote${data.votes > 1 ? 's' : ''})`;
     } else {
-      infoDiv.textContent = "No ratings yet";
+      infoDiv.textContent = "Be the first user to rate!";
     }
 
     updateStarsVisual(userRating); // show user's own rating on UI
