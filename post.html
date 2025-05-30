@@ -204,16 +204,14 @@ document.addEventListener("DOMContentLoaded", () => {
 <script type="module">
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
 
-// Firebase app is assumed to be already initialized
-
-// Determine uId from URL
+// Assume Firebase is already initialized
 const uId = new URLSearchParams(location.search).get("uId");
 if (!uId || uId.length !== 12) {
   console.error("Invalid or missing uId in URL.");
   return;
 }
 
-// Get user ID (anonymous per browser)
+// Assign anonymous user ID per browser
 let anonId = localStorage.getItem("anonId");
 if (!anonId) {
   anonId = "anon-" + Math.random().toString(36).substring(2, 10);
@@ -223,18 +221,21 @@ if (!anonId) {
 const db = getDatabase();
 const commentsRef = ref(db, "comments/" + uId);
 
-// Create comment section container
-const commentSection = document.createElement("section");
-commentSection.id = "comment-section";
+// Get the existing comment section container
+const commentSection = document.getElementById("comment-section");
+if (!commentSection) {
+  console.error("Missing <div id='comment-section'> in the page.");
+  return;
+}
+
+// Inject the UI into existing comment-section div
 commentSection.innerHTML = `
   <h3>Comments</h3>
   <div id="comments-container"></div>
-  <button id="load-more" style="margin-top:10px;display:none;">Show more</button>
-  <textarea id="comment-input" placeholder="Write a comment..." style="width:100%;margin-top:1em;"></textarea>
+  <button id="load-more" style="margin-top:10px; display:none;">Show more</button>
+  <textarea id="comment-input" placeholder="Write a comment..." style="width:100%; margin-top:1em;"></textarea>
   <button id="post-comment" style="margin-top:5px;">Post</button>
 `;
-document.getElementById("commen-section").appendChild(commentSection);
-
 
 const commentsContainer = document.getElementById("comments-container");
 const loadMoreBtn = document.getElementById("load-more");
@@ -242,7 +243,6 @@ const loadMoreBtn = document.getElementById("load-more");
 let allComments = [];
 let visibleCount = 0;
 
-// Load comments from Firebase
 onValue(commentsRef, (snapshot) => {
   const data = snapshot.val() || {};
   allComments = Object.entries(data)
@@ -278,6 +278,7 @@ document.getElementById("post-comment").onclick = () => {
   document.getElementById("comment-input").value = "";
 };
 </script>
+
 
 
 </body>
