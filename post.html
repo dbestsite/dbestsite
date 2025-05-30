@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const video = data.find(v => v.uniqueId === uid);
       if (video) renderSingleVideo(video);
       else videoContainer.innerHTML = "<p>Video not found.</p>";
+      
     });
 
   function renderSingleVideo(video) {
@@ -111,7 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="rating-box" id="rating-${video.postId}">Loading rating...</div>
     `;
 
-    setupRatingSystem(video.postId);
+    setupRatingSystem(video.postId); setupCommentSection(video.postId);
+
   }
 
 ;
@@ -201,6 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+  
 <script type="module">
 import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -217,88 +220,76 @@ const firebaseConfig = {
   measurementId: "G-9DSK5WTW62"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Get post uId from URL
-const uId = new URLSearchParams(window.location.search).get("uId");
-if (!uId || !/^[a-zA-Z0-9]{12}$/.test(uId)) {
-  console.error("Invalid or missing uId in URL.");
-  throw new Error("Invalid post ID");
-}
-
-// Generate or retrieve anonymous ID
+// Anonymous ID (saved per browser)
 let anonId = localStorage.getItem("anonId");
 if (!anonId) {
-  anonId = "anon-" + Math.random().toString(36).substring(2, 10);
+  anonId = "anon-" + Math.random().toString(36).substring(2, 11);
   localStorage.setItem("anonId", anonId);
 }
 
-// Render comment UI
-const commentSection = document.getElementById("comment-section");
-if (!commentSection) {
-  console.error("Missing #comment-section element.");
-  throw new Error("Missing comment section container");
-}
+// Reusable comment setup function
+window.setupCommentSection = function(postId) {
+  const container = document.getElementById("comment-section");
+  if (!container) return;
 
-commentSection.innerHTML = `
-  <h3>Comments</h3>
-  <textarea id="comment-input" placeholder="Write a comment..." style="width:100%; height:60px; margin-bottom:0.5em;"></textarea>
-  <br>
-  <button id="post-comment" style="margin-bottom:1em;">Post</button>
-  <div id="comments-container" style="margin-top:1em;"></div>
-  <button id="load-more" style="display:none; margin-top:1em;">Show more</button>
-`;
+  container.innerHTML = `
+    <h3>Comments</h3>
+    <textarea id="comment-input" placeholder="Write a comment..." style="width: 100%; height: 4em;"></textarea>
+    <button id="submit-comment" style="margin: 0.5em 0;">Submit</button>
+    <div id="comments-container"></div>
+    <button id="load-more" style="display:none; margin-top: 1em;">Show more</button>
+  `;
 
-const commentsRef = ref(db, "comments/" + uId);
-const input = document.getElementById("comment-input");
-const postBtn = document.getElementById("post-comment");
-const commentsContainer = document.getElementById("comments-container");
-const loadMoreBtn = document.getElementById("load-more");
+  const input = document.getElementById("comment-input");
+  const submitBtn = document.getElementById("submit-comment");
+  const commentsContainer = document.getElementById("comments-container");
+  const loadMoreBtn = document.getElementById("load-more");
 
-let allComments = [];
-let visibleCount = 0;
+  let allComments = [];
+  let visibleCount = 0;
 
-// Submit comment
-postBtn.onclick = async () => {
-  const text = input.value.trim();
-  if (!text) return;
+  const commentsRef = ref(db, `comments/${postId}`);
 
-  await push(commentsRef, {
-    user: anonId,
-    text,
-    timestamp: Date.now()
+  submitBtn.addEventListener("click", () => {
+    const text = input.value.trim();
+    if (text === "") return;
+    push(commentsRef, {
+      text,
+      user: anonId,
+      time: Date.now()
+    });
+    input.value = "";
   });
 
-  input.value = "";
+  onValue(commentsRef, (snapshot) => {
+    const data = snapshot.val();
+    allComments = data ? Object.values(data).sort((a, b) => a.time - b.time) : [];
+    visibleCount = 0;
+    commentsContainer.innerHTML = "";
+    showMoreComments();
+  });
+
+  loadMoreBtn.addEventListener("click", showMoreComments);
+
+  function showMoreComments() {
+    const next = allComments.slice(visibleCount, visibleCount + (visibleCount === 0 ? 7 : 15));
+    next.forEach(comment => {
+      const div = document.createElement("div");
+      div.style.borderBottom = "1px solid #ccc";
+      div.style.padding = "0.5em 0";
+      const anonNum = comment.user?.split("-")[1]?.slice(0, 9) || "000000000";
+      div.textContent = `Anonymous +${anonNum}: ${comment.text}`;
+      commentsContainer.appendChild(div);
+    });
+    visibleCount += next.length;
+    loadMoreBtn.style.display = visibleCount < allComments.length ? "block" : "none";
+  }
 };
-
-// Listen for new comments
-onValue(commentsRef, (snapshot) => {
-  const data = snapshot.val() || {};
-  allComments = Object.values(data).sort((a, b) => b.timestamp - a.timestamp);
-  visibleCount = 0;
-  commentsContainer.innerHTML = "";
-  showMoreComments();
-});
-
-// Load next batch
-function showMoreComments() {
-  const next = allComments.slice(visibleCount, visibleCount + (visibleCount === 0 ? 7 : 15));
-  next.forEach(comment => {
-    const div = document.createElement("div");
-    div.style.borderBottom = "1px solid #ccc";
-    div.style.padding = "0.5em 0";
-    div.textContent = `Anonymous: ${comment.text}`;
-    commentsContainer.appendChild(div);
-  });
-  visibleCount += next.length;
-  loadMoreBtn.style.display = visibleCount < allComments.length ? "block" : "none";
-}
-
-loadMoreBtn.onclick = showMoreComments;
 </script>
+
 
 
 
