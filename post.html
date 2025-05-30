@@ -94,34 +94,27 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch(item)
   .then(res => res.json())
   .then(data => {
-    const uid = getUidFromUrl(); // Assumes your URL uses ?uId=xxxx
+    const uid = getUidFromUrl(); // assumes ?uId=uniqueId
     const video = data.find(v => v.uniqueId === uid);
+
     if (!video) {
       videoContainer.innerHTML = "<p>Video not found.</p>";
       return;
     }
 
-    // Reference to Firebase rating data
-    const ratingRef = firebase.database().ref('ratings/' + uid);
-
+    // Use Firebase directly with postId
+    const ratingRef = firebase.database().ref('ratings/' + video.postId);
     ratingRef.once('value').then(snapshot => {
-      const firebaseData = snapshot.val();
+      const fbData = snapshot.val();
 
-      if (firebaseData) {
-        // If Firebase already has data, use that
-        video.votes = firebaseData.votes;
-        video.sum = firebaseData.sum;
-      } else {
-        // If no data yet, initialize Firebase with JSON values
-        const initialVotes = video.votes || 0;
-        const initialSum = video.sum || 0;
-        firebase.database().ref('ratings/' + uid).set({
-          votes: initialVotes,
-          sum: initialSum
-        });
+      // If no data in Firebase, initialize with JSON
+      if (!fbData) {
+        const votes = video.votes || 0;
+        const sum = video.sum || 0;
+        ratingRef.set({ votes, sum });
       }
 
-      // Now render the video (and call setupRatingSystem)
+      // Render the video (setupRatingSystem will re-fetch from Firebase anyway)
       renderSingleVideo(video);
     });
   });
