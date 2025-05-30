@@ -91,11 +91,11 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
 
   const ratingRef = ref(db, `ratings/${postId}`);
 
-  get(ratingRef).then(snapshot => {
-    if (!snapshot.exists()) {
-      set(ratingRef, { votes: initialVotes, sum: initialSum });
-    }
-  });
+get(ratingRef).then(snapshot => {
+  if (!snapshot.exists() && initialVotes && initialSum) {
+    set(ratingRef, { votes: initialVotes, sum: initialSum });
+  }
+});
 
   onValue(ratingRef, (snapshot) => {
     const data = snapshot.val();
