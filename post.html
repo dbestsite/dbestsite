@@ -201,6 +201,82 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script type="module">
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+
+// Firebase app is assumed to be already initialized
+
+// Determine uId from URL
+const uId = new URLSearchParams(location.search).get("uId");
+if (!uId || uId.length !== 12) {
+  console.error("Invalid or missing uId in URL.");
+  return;
+}
+
+// Get user ID (anonymous per browser)
+let anonId = localStorage.getItem("anonId");
+if (!anonId) {
+  anonId = "anon-" + Math.random().toString(36).substring(2, 10);
+  localStorage.setItem("anonId", anonId);
+}
+
+const db = getDatabase();
+const commentsRef = ref(db, "comments/" + uId);
+
+// Create comment section container
+const commentSection = document.createElement("section");
+commentSection.id = "comment-section";
+commentSection.innerHTML = `
+  <h3>Comments</h3>
+  <div id="comments-container"></div>
+  <button id="load-more" style="margin-top:10px;display:none;">Show more</button>
+  <textarea id="comment-input" placeholder="Write a comment..." style="width:100%;margin-top:1em;"></textarea>
+  <button id="post-comment" style="margin-top:5px;">Post</button>
+`;
+document.body.appendChild(commentSection);
+
+const commentsContainer = document.getElementById("comments-container");
+const loadMoreBtn = document.getElementById("load-more");
+
+let allComments = [];
+let visibleCount = 0;
+
+// Load comments from Firebase
+onValue(commentsRef, (snapshot) => {
+  const data = snapshot.val() || {};
+  allComments = Object.entries(data)
+    .sort((a, b) => b[1].timestamp - a[1].timestamp); // Newest first
+  visibleCount = 0;
+  commentsContainer.innerHTML = "";
+  showMoreComments();
+});
+
+function showMoreComments() {
+  const nextChunk = allComments.slice(visibleCount, visibleCount + (visibleCount === 0 ? 7 : 15));
+  nextChunk.forEach(([key, comment]) => {
+    const div = document.createElement("div");
+    div.style.marginBottom = "0.5em";
+    div.textContent = `Anonymous: ${comment.text}`;
+    commentsContainer.appendChild(div);
+  });
+  visibleCount += nextChunk.length;
+  loadMoreBtn.style.display = visibleCount < allComments.length ? "block" : "none";
+}
+
+loadMoreBtn.onclick = showMoreComments;
+
+document.getElementById("post-comment").onclick = () => {
+  const text = document.getElementById("comment-input").value.trim();
+  if (!text) return;
+  const comment = {
+    user: anonId,
+    text,
+    timestamp: Date.now()
+  };
+  push(commentsRef, comment);
+  document.getElementById("comment-input").value = "";
+};
+</script>
 
 
 </body>
