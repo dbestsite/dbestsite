@@ -233,7 +233,8 @@ commentSection.innerHTML = `
   <textarea id="comment-input" placeholder="Write a comment..." style="width:100%;margin-top:1em;"></textarea>
   <button id="post-comment" style="margin-top:5px;">Post</button>
 `;
-document.body.appendChild(commentSection);
+document.getElementById("commen-section").appendChild(commentSection);
+
 
 const commentsContainer = document.getElementById("comments-container");
 const loadMoreBtn = document.getElementById("load-more");
