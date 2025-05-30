@@ -58,32 +58,33 @@ export function setupRatingSystem(postId, initialVotes = 0, initialSum = 0) {
 
       const ratingRef = ref(db, `ratings/${postId}`);
       runTransaction(ratingRef, current => {
-        if (current === null) {
-          return {
-            votes: initialVotes + 1,
-            sum: initialSum + i
-          };
-        }
+  if (current === null) {
+    return {
+      votes: initialVotes + 1,
+      sum: initialSum + i
+    };
+  }
 
-        let votes = current.votes;
-        let sum = current.sum;
+  let votes = current.votes;
+  let sum = current.sum;
 
-        // If this is the first time, add new vote
-        if (!userRating) {
-          votes += 1;
-          sum += i;
-        } else {
-          // If already rated, just adjust sum
-          sum = sum - userRating + i;
-        }
+  if (!userRating) {
+    votes += 1;
+    sum += i;
+  } else {
+    sum = sum - userRating + i;
+  }
 
-        return { votes, sum };
-      }).then(() => {
-        userRating = i;
-        localStorage.setItem(userKey, i);
-        updateStarsVisual(userRating);
-      }).catch(console.error);
-    });
+  return { votes, sum };
+}).then(result => {
+  if (result.committed) {
+    userRating = i;
+    localStorage.setItem(userKey, i);
+    updateStarsVisual(userRating);
+  }
+}).catch(console.error);
+      });
+        
 
     starsDiv.appendChild(star);
     stars.push(star);
