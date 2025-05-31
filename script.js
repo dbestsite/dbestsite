@@ -203,10 +203,16 @@ function renderVideos() {
       : video.tags.split(',').map(t => t.trim());
 
     card.innerHTML = `
-      <h3>${video.title}</h3>
-      <video src="${video.url}" controls playsinline controlsList="nodownload" muted></video>
-      
-    `;
+  <h3>${video.title}</h3>
+  <video 
+    src="${video.url}" 
+    controls 
+    playsinline 
+    muted 
+    controlsList="nodownload nofullscreen noplaybackrate" 
+    class="no-center-play"
+  ></video>
+`;
 
     // Click event to go to single post page using uniqueId
     if (!isSinglePost) {
