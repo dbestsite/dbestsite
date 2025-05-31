@@ -64,30 +64,68 @@ fetch(file)
 
 function initFilters() {
   const allTags = [
-  ...new Set(
-    videoData.flatMap(v =>
-      Array.isArray(v.tags)
-        ? v.tags
-        : v.tags.split(',').map(t => t.trim())
+    ...new Set(
+      videoData.flatMap(v =>
+        Array.isArray(v.tags)
+          ? v.tags
+          : v.tags.split(',').map(t => t.trim())
+      )
     )
-  )
-];
+  ];
 
-  allTags.forEach(tag => {
-    const btn = document.createElement("button");
-    btn.textContent = tag;
-    btn.onclick = () => {
-      if (selectedTags.has(tag)) {
-        selectedTags.delete(tag);
-        btn.classList.remove("active");
-      } else {
-        selectedTags.add(tag);
-        btn.classList.add("active");
-      }
-      applyFilters();
-    };
-    tagFilter.appendChild(btn);
-  });
+  const tagsPerPage = 20;
+  let expanded = false;
+
+  const tagButtons = []; // Store buttons so we can show/hide them
+  const showMoreBtn = document.createElement("button");
+  showMoreBtn.className = "show-more-tags";
+
+  function renderInitialTags() {
+    tagFilter.innerHTML = ""; // Clear old tags
+    tagButtons.length = 0;
+
+    allTags.forEach((tag, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = tag;
+      btn.style.display = index < tagsPerPage ? "inline-block" : "none";
+      btn.onclick = () => {
+        if (selectedTags.has(tag)) {
+          selectedTags.delete(tag);
+          btn.classList.remove("active");
+        } else {
+          selectedTags.add(tag);
+          btn.classList.add("active");
+        }
+        applyFilters();
+      };
+      tagFilter.appendChild(btn);
+      tagButtons.push(btn);
+    });
+
+    showMoreBtn.textContent = "Show More Tags";
+    showMoreBtn.onclick = toggleTags;
+    tagFilter.appendChild(showMoreBtn);
+  }
+
+  function toggleTags() {
+    if (expanded) {
+      // Collapse
+      tagButtons.forEach((btn, i) => {
+        btn.style.display = i < tagsPerPage ? "inline-block" : "none";
+      });
+      showMoreBtn.textContent = "Show More Tags";
+      expanded = false;
+    } else {
+      // Expand
+      tagButtons.forEach(btn => {
+        btn.style.display = "inline-block";
+      });
+      showMoreBtn.textContent = "Show Less Tags";
+      expanded = true;
+    }
+  }
+
+  renderInitialTags();
 
   searchInput.addEventListener("input", applyFilters);
 }
