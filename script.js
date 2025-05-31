@@ -76,12 +76,16 @@ function initFilters() {
   const tagsPerPage = 20;
   let expanded = false;
 
-  const tagButtons = []; // Store buttons so we can show/hide them
+  const tagButtons = []; // Store all tag buttons
+  const tagFilter = document.getElementById("tagFilter");
+  const tagToggleContainer = document.getElementById("tagToggleContainer");
+
   const showMoreBtn = document.createElement("button");
   showMoreBtn.className = "show-more-tags";
 
   function renderInitialTags() {
-    tagFilter.innerHTML = ""; // Clear old tags
+    tagFilter.innerHTML = "";
+    tagToggleContainer.innerHTML = "";
     tagButtons.length = 0;
 
     allTags.forEach((tag, index) => {
@@ -104,19 +108,19 @@ function initFilters() {
 
     showMoreBtn.textContent = "Show More Tags";
     showMoreBtn.onclick = toggleTags;
-    tagFilter.appendChild(showMoreBtn);
+    tagToggleContainer.appendChild(showMoreBtn);
   }
 
   function toggleTags() {
     if (expanded) {
-      // Collapse
+      // Collapse to first 20
       tagButtons.forEach((btn, i) => {
         btn.style.display = i < tagsPerPage ? "inline-block" : "none";
       });
       showMoreBtn.textContent = "Show More Tags";
       expanded = false;
     } else {
-      // Expand
+      // Show all
       tagButtons.forEach(btn => {
         btn.style.display = "inline-block";
       });
@@ -126,7 +130,6 @@ function initFilters() {
   }
 
   renderInitialTags();
-
   searchInput.addEventListener("input", applyFilters);
 }
 
