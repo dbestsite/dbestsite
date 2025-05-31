@@ -77,7 +77,7 @@ function initFilters() {
   let expanded = false;
 
   const tagButtons = []; // Store all tag buttons
-  const tagFilter = document.getElementById("tagFilter");
+  const tagFilter = document.getElementById("tag-filter");
   const tagToggleContainer = document.getElementById("tagToggleContainer");
 
   const showMoreBtn = document.createElement("button");
