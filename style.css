@@ -120,6 +120,11 @@ video {
   border-radius: 10px;
 }
 
+video.no-center-play::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 .tags span {
   color: #ccc;
   margin-right: 0.5rem;
