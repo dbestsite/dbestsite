@@ -8,7 +8,7 @@
     "uniqueId": "ZPTJKL780213",
     "votes": 11324,
     "sum": 56620,
-    "start": 205
+    "start": 89
   },
   {
     "title": "WLT-643",
@@ -28,7 +28,7 @@
     "uniqueId": "QVHZOP198307",
     "votes": 13215,
     "sum": 66075,
-    "start": 249
+    "start": 75
   },
   {
     "title": "YME-824",
@@ -38,7 +38,7 @@
     "uniqueId": "AKUVMJ583410",
     "votes": 18700,
     "sum": 93500,
-    "start": 162
+    "start": 73
   },
   {
     "title": "BLD-517",
@@ -48,7 +48,7 @@
     "uniqueId": "XQOIZN287456",
     "votes": 12034,
     "sum": 60170,
-    "start": 301
+    "start": 28
   },
   {
     "title": "TQC-912",
@@ -126,7 +126,7 @@
     "postId": "video139",
     "uniqueId": "TZQHUK837541",
     "votes": 10680,
-    "sum": 53400
+    "sum": 53400, "start": 6
   },
   {
     "title": "MTJ-507",
