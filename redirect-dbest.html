@@ -35,6 +35,20 @@
   </style>
 </head>
 <body>
-  Redirecting to D' Best Site... Please wait.
+  Redirecting to D' Best Site in <span id="countdown">3</span>...
+  
+  <script>
+    let seconds = 3;
+    const countdownElement = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      seconds--;
+      countdownElement.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = "https://dbestsite.netlify.app/";
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
