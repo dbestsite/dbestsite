@@ -142,6 +142,17 @@ video.no-center-play::-webkit-media-controls-start-playback-button {
   margin-right: 0.5rem;
 }
 
+#tagToggleContainer {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.show-more-tags {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 .rating-box {
   font-size: 1.5rem;
   color: #00ff99;
