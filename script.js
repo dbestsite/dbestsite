@@ -206,11 +206,11 @@ function renderVideos() {
   <h3>${video.title}</h3>
   <video 
     src="${video.url}" 
-    controls 
-    playsinline 
+    autoplay 
     muted 
-    controlsList="nodownload nofullscreen noplaybackrate" 
-    class="no-center-play"
+    loop 
+    playsinline 
+    class="no-center-play preview-video"
   ></video>
 `;
 
