@@ -1,53 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting to D' Best Site</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D' Best Site - Redirecting...</title>
 
-  <!-- Open Graph (Facebook, LinkedIn, etc.) -->
-  <meta property="og:title" content="D' Best Site">
-  <meta property="og:description" content="Watch 18+ videos for free">
-  <meta property="og:image" content="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png">
-  <meta property="og:url" content="https://dbestsite.netlify.app/redirect-dbest.html">
-  <meta property="og:type" content="website">
+  <!-- Open Graph (Facebook, LinkedIn) -->
+  <meta property="og:title" content="D' Best Site" />
+  <meta property="og:description" content="Watch 18+ videos for free" />
+  <meta property="og:image" content="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" />
+  <meta property="og:url" content="https://dbestsite.netlify.app/redirect-dbest.html" />
+  <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="D' Best Site">
-  <meta name="twitter:description" content="Redirecting you to D' Best Site...">
-  <meta name="twitter:image" content="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png">
-<link rel="icon" href="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" type="image/x-icon">
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="D' Best Site" />
+  <meta name="twitter:description" content="Watch 18+ videos for free" />
+  <meta name="twitter:image" content="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" type="image/x-icon" />
+
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       background: #121212;
       color: #00ff88;
       font-family: Arial, sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       text-align: center;
       padding: 1rem;
+    }
+    #preview-img {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+    a.button {
+      background: #00ff88;
+      color: #121212;
+      padding: 0.8rem 1.5rem;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 0 10px #00ff88;
+      transition: background 0.3s;
+      margin-top: 1rem;
+    }
+    a.button:hover {
+      background: #00cc6a;
+    }
+    .countdown {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
-  <img src="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" 
-     alt="D' Best Site Preview Thumbnail" 
-     style="width:1200px; height:auto; max-width:100%; opacity:0; position:absolute; z-index:-1;" /><br><br>
+
+<script type="text/javascript">
+	atOptions = {
+		'key' : '5a944efcf8c1ae5899ea4d3ccf62e6a1',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//swollenbasis.com/5a944efcf8c1ae5899ea4d3ccf62e6a1/invoke.js"></script>
+
+
+  <img id="preview-img" src="https://pub-b78a104481734a84b2826781bf3b5082.r2.dev/Screenshot_20250518-055004.png" alt="Preview Thumbnail" />
   
-  Redirecting to D' Best Site in <br><br>
-  <span id="countdown">3</span>...
-  
+  <p>You're about to enter<br><strong>D' Best Site</strong></p>
+
+  <a class="button" href="https://dbestsite.netlify.app/">Continue to Site</a>
+
+  <div class="countdown">Auto-redirecting in <span id="timer">5</span> seconds...</div>
+
+<script type="text/javascript">
+	atOptions = {
+		'key' : '5a944efcf8c1ae5899ea4d3ccf62e6a1',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//swollenbasis.com/5a944efcf8c1ae5899ea4d3ccf62e6a1/invoke.js"></script>
+
   <script>
-    let seconds = 3;
-    const countdownElement = document.getElementById("countdown");
+    let seconds = 5;
+    const timer = document.getElementById("timer");
 
     const interval = setInterval(() => {
       seconds--;
-      countdownElement.textContent = seconds;
+      timer.textContent = seconds;
       if (seconds <= 0) {
         clearInterval(interval);
         window.location.href = "https://dbestsite.netlify.app/";
