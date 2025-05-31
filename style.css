@@ -120,9 +120,21 @@ video {
   border-radius: 10px;
 }
 
+/* Hide WebKit play button */
 video.no-center-play::-webkit-media-controls-start-playback-button {
   display: none !important;
   -webkit-appearance: none;
+}
+
+/* Fully hide all controls */
+.preview-video {
+  pointer-events: none; /* Prevent interaction */
+  user-select: none;
+}
+
+/* Optional: Remove outline when selected/focused */
+.preview-video:focus {
+  outline: none;
 }
 
 .tags span {
