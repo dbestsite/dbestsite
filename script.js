@@ -246,8 +246,7 @@ function renderVideos() {
     card.innerHTML = `
   <h3>${video.title}</h3>
   <video 
-    src="${video.url}" 
-    autoplay 
+    src="${video.url}"  
     muted 
     loop 
     playsinline 
