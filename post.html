@@ -284,7 +284,7 @@ window.setupCommentSection = function(postId) {
       div.style.borderBottom = "1px solid #ccc";
       div.style.padding = "0.5em 0";
       const anonNum = comment.user?.split("-")[1]?.slice(0, 9) || "000000000";
-      div.textContent = `Anonymous +${anonNum}: ${comment.text}`;
+      div.textContent = `Anonymous User ${anonNum}: ${comment.text}`;
       commentsContainer.appendChild(div);
     });
     visibleCount += next.length;
