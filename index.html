@@ -90,56 +90,7 @@
   });
 </script>
 
-    <div id="age-gate-overlay"></div>
 
-  <div id="age-gate" style="justify-content: center; align-items: center; text-align: center;">
-  <h2>Are you 18 or older?</h2>
-  <button onclick="verifyAge(true)">Yes</button>
-  <button onclick="verifyAge(false)">No</button>
-  <label>
-    <input type="checkbox" id="remember-choice"> Remember me for 24 hours
-  </label>
-  </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const ageGate = document.getElementById("age-gate");
-    const ageOverlay = document.getElementById("age-gate-overlay");
-    const lastVerified = localStorage.getItem("lastVerified");
-
-    function showGate() {
-        ageGate.style.display = "flex";
-        ageOverlay.style.display = "block";
-        document.body.style.overflow = "hidden";
-    }
-
-    function hideGate() {
-        ageGate.style.display = "none";
-        ageOverlay.style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    if (lastVerified && Date.now() - parseInt(lastVerified) < 86400000) {
-        hideGate();
-    } else {
-        showGate();
-    }
-
-    window.verifyAge = function (isOldEnough) {
-        if (isOldEnough) {
-            if (document.getElementById("remember-choice").checked) {
-                localStorage.setItem("lastVerified", Date.now());
-            } else {
-                localStorage.removeItem("lastVerified");
-            }
-            hideGate();
-        } else {
-            alert("Sorry, you are not old enough to access this site.");
-            window.location.href = "https://www.google.com";
-        }
-    };
-});
-
-</script>
 
 <script type="module" src="adBanner.js"></script>
 <script type="module" src="pcAds.js"></script>
